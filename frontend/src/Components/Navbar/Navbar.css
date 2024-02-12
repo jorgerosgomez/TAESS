@@ -46,5 +46,15 @@ ul li{
     color: #fff; 
     text-decoration: none;
   }
+
+  .user-icon{
+    width: 50px; 
+    height: 50px; 
+    background-color: white;
+    border-radius: 100%;
+    margin-right: 16px; 
+    cursor: pointer; 
+}
+
   
  

@@ -1,0 +1,61 @@
+/* ModalRegistry.css */
+.register-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.register-modal-content {
+    background: #222;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px; /* O el ancho que prefieras */
+}
+
+.register-modal-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    float: right; /* Asegúrate de que el botón esté en la esquina superior derecha */
+}
+
+.register-modal-header h2 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px; /* Agrega un espacio debajo del título si es necesario */
+}
+
+.register-modal-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.register-modal-form input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px; /* Añade espacio en la parte superior de cada input */
+    border-radius: 5px;
+    border: 1px solid #333;
+    background: #333;
+    color: #fff;
+}
+
+.register-modal-form button {
+    padding: 10px 15px;
+    margin-top: 20px; /* Añade espacio en la parte superior del botón */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #f0ad4e; /* Usa el mismo color que en el modal de inicio de sesión */
+    color: #000; /* Texto en color oscuro para contraste */
+    width: 100%; /* Opcional: Hace que el botón ocupe todo el ancho disponible */
+}

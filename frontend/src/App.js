@@ -5,6 +5,9 @@ import HomePage from './Components/HomePage/HomePage';
 import ProductPage from './Components/ProductPage/ProductPage';
 import BookingPage from './Components/BookingPage/BookingPage'; 
 import AboutUsPage from './Components/AboutUsPage/AboutUsPage'; 
+import UserInfo from './Components/UserInfo/UserInfo';
+import { AuthProvider } from './Components/AuthContext/AuthContext';
+import Admin from './Components/Admin/Admin';
 
 const App = () => {
   const [theme, setTheme] = useState(() => {
@@ -15,9 +18,12 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem('current_theme', theme);
   }, [theme]);
+  
+  
 
   return (
     <Router>
+      <AuthProvider>      
       <div className={`container ${theme}`}>
         <Navbar theme={theme} setTheme={setTheme} />
         <Routes>
@@ -25,8 +31,13 @@ const App = () => {
           <Route path="/productos" element={<ProductPage />} />
           <Route path="/reservas" element={<BookingPage />} />
           <Route path="/quienes-somos" element={<AboutUsPage />} />
+          <Route path="/administracion" element={<Admin />} />
+          <Route path="/user-info" element={<UserInfo />} />
+          
         </Routes>
       </div>
+      </AuthProvider>
+
     </Router>
   );
 };
