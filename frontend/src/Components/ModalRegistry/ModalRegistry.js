@@ -1,23 +1,40 @@
 import React, { useState } from "react";
 import '../../Components/ModalRegistry/ModalRegistry.css'; 
-const RegisterModal = ({ closeModal }) => {
+import { registerUser } from './ReqRegisry';
+
+const RegisterModal = ({ closeModal, theme }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí manejarías la lógica para registrar al usuario
-    console.log(username, email, password, confirmPassword);
-    // Validar que password y confirmPassword coincidan
-    // Luego cerrar el modal
-    closeModal();
+    if (password !== confirmPassword) {
+      alert('Las contraseñas no coinciden.');
+      return;
+    }
+    
+    try {
+      const data = await registerUser(username, email, password);
+      if (data.success) {
+        console.log('Usuario registrado con éxito:', data);
+        closeModal();
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error('Error al registrar el usuario:', error);
+      alert('Hubo un problema al registrar tu cuenta.');
+    }
   };
 
+  // Define modalContentClass correctly here
+  const modalContentClass = `register-modal-content ${theme === 'dark' ? 'dark' : 'light'}`;
+
   return (
-    <div className="register-modal-backdrop">
-      <div className="register-modal-content">
+    <div className={`register-modal-backdrop ${theme}`}>
+      <div className={modalContentClass}>
         <button className="register-modal-close" onClick={closeModal}>&times;</button>
         <h2>Registrarse</h2>
         <form onSubmit={handleSubmit} className="register-modal-form">

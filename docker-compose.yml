@@ -21,7 +21,7 @@ services:
     environment:
       NODE_ENV: production
       DATABASE_HOST: db
-      DATABASE_USER: root
+      DATABASE_USER: root 
       DATABASE_PASSWORD: example
       DATABASE_NAME: myappdb
     depends_on:
@@ -34,12 +34,12 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: myappdb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
     ports:
-      - "3306:3306"
+      - "1500:3306"
     networks:
       - app-network
 

@@ -1,4 +1,3 @@
-/* ModalRegistry.css */
 .register-modal-backdrop {
     position: fixed;
     top: 0;
@@ -12,50 +11,123 @@
     z-index: 1000;
 }
 
-.register-modal-content {
-    background: #222;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px; /* O el ancho que prefieras */
-}
-
-.register-modal-close {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 1.5rem;
-    cursor: pointer;
-    float: right; /* Asegúrate de que el botón esté en la esquina superior derecha */
-}
-
-.register-modal-header h2 {
-    color: #fff;
-    text-align: center;
-    margin-bottom: 20px; /* Agrega un espacio debajo del título si es necesario */
-}
-
-.register-modal-form {
-    display: flex;
-    flex-direction: column;
+.register-modal-form label {
+    display: block;
+    margin-bottom: .5rem;
+    color: #333;
 }
 
 .register-modal-form input {
     width: 100%;
     padding: 10px;
-    margin-top: 10px; /* Añade espacio en la parte superior de cada input */
-    border-radius: 5px;
-    border: 1px solid #333;
-    background: #333;
-    color: #fff;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .register-modal-form button {
-    padding: 10px 15px;
-    margin-top: 20px; /* Añade espacio en la parte superior del botón */
+    width: 100%;
+    padding: 10px;
+    margin-top: 1rem;
     border: none;
+    border-radius: 4px;
+    background-color: #f0ad4e;
+    color: #000;
+    cursor: pointer;
+}
+
+.register-modal-content {
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.register-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.register-modal-header h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.register-modal-form {
+    margin-top: 20px;
+}
+
+.register-modal-input-group {
+    margin-bottom: 15px;
+}
+
+.register-modal-input-group label {
+    display: block;
+}
+
+.register-modal-input-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid;
+}
+
+.register-modal-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.login-modal-submit,
+.login-modal-register {
+    padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #f0ad4e; /* Usa el mismo color que en el modal de inicio de sesión */
-    color: #000; /* Texto en color oscuro para contraste */
-    width: 100%; /* Opcional: Hace que el botón ocupe todo el ancho disponible */
+    border: none;
+}
+
+.light .register-modal-content {
+    background: #fff;
+    color: #333;
+}
+
+.light .register-modal-close {
+    color: #333;
+}
+
+.light .register-modal-form input {
+    background: #fff;
+    border-color: #ccc;
+    color: #333;
+}
+
+.light .register-modal-form button {
+    background-color: #f0ad4e;
+    color: #000;
+}
+
+.dark .register-modal-content {
+    background: #222;
+    color: #fff;
+}
+
+.dark .register-modal-close {
+    color: #fff;
+}
+
+.dark .register-modal-form input {
+    background: #333;
+    border-color: #444;
+    color: #fff;
+}
+
+.dark .register-modal-form button {
+    background-color: #f0ad4e;
+    color: #000;
 }

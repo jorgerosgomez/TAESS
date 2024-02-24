@@ -8,6 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instala las dependencias del proyecto
+RUN rm -rf node_modules
 RUN npm install
 
 # Copia los archivos del proyecto al directorio de trabajo en el contenedor

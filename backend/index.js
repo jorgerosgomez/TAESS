@@ -1,28 +1,57 @@
-// index.js o server.js
-
-// Importa Express
 const express = require('express');
+const cors = require('cors'); // Importa CORS
+const { createUser } = require('./usercontroler');
+const { loginUser } = require('./loginUser');
 
-// Crea una nueva instancia de Express
 const app = express();
-
-// Define el puerto en el que el servidor estará escuchando
-const PORT = process.env.PORT || 5000;
-
-// Middleware para parsear JSON en el cuerpo de las solicitudes
 app.use(express.json());
+app.use(cors());
 
-// Define una ruta raíz y envía una respuesta simple
-app.get('/', (req, res) => {
-  res.send('ahora?');
+app.post('/api/register', async (req, res) => {
+
+  if (!req.is('application/json')) {
+    return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
+  }
+
+  
+  if (Object.keys(req.body).length === 0) {
+    return res.status(400).json({ success: false, message: 'El cuerpo de la solicitud está vacío' });
+  }
+
+  // Desestructurar 'username', 'email' y 'password' del cuerpo de la solicitud
+  const { username, email, password } = req.body;
+  
+  // Llamada a 'createUser'
+  const result = await createUser(username, email, password);
+
+  if (result.success) {
+    res.json({ success: true, message: 'Usuario registrado con éxito', userId: result.userId });
+  } else {
+    // Considera manejar diferentes códigos de estado HTTP dependiendo del error
+    res.status(500).json({ success: false, message: result.message });
+  }
 });
 
-// Ruta de ejemplo que podría usarse para manejar solicitudes a tu API
-app.get('/api', (req, res) => {
-  res.json({ mensaje: "Esto es una respuesta de prueba desde tu API" });
+app.post('/api/login', async (req, res) => {
+ 
+  console.log('Se recibió una solicitud de inicio de sesión')
+  if (!req.is('application/json')) {
+    return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
+  }
+
+  const { username, password } = req.body;
+
+  // Llama a la función controladora para iniciar sesión
+  const result = await loginUser(username, password);
+
+  if (result.success) {
+    res.json({ success: true, message: 'Inicio de sesión exitoso', token: result.token });
+  } else {
+    res.status(401).json({ success: false, message: 'Credenciales incorrectas' });
+  }
 });
 
-// Hace que el servidor escuche en el puerto especificado
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

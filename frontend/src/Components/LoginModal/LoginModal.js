@@ -1,29 +1,39 @@
-import React, {useState} from "react";
-import '../../Components/LoginModal/LoginModal.css'
-import '../../Components/ModalRegistry/ModalRegistry.js'
+import React, { useState } from "react";
+import '../../Components/LoginModal/LoginModal.css';
+import loginUser from './ReqLogin.js';
+import { useAuth } from "../AuthContext/AuthContext.js";
 
-const LoginModal = ({ closeModal, openRegisterModal, theme}) => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+
+const LoginModal = ({ closeModal, openRegisterModal, theme }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const { isAuthenticated, login, logout } = useAuth();
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     
-  
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      
-      console.log(username, password);
-      closeModal();
-    };
+    try {
+      const data = await loginUser(username, password);
+      console.log('entro');
+      if (data.success) {
+        console.log('Inicio de sesión exitoso:', data);
+        login();
+        closeModal();
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error.message);
+      alert('Hubo un problema al iniciar sesión');
+    }
+  };
 
-    const handleRegisterClick = (e) => {
-      e.preventDefault();
-      openRegisterModal();
-    };
-  
-    const modalClass = `login-modal-content ${theme === 'dark' ? 'login-modal-dark' : ''}`;
+  const modalContentClass = `login-modal-content ${theme === 'dark' ? 'dark' : 'light'}`;
 
   return (
-    <div className="login-modal-backdrop">
-      <div className={modalClass}>
+    <div className={`login-modal-backdrop ${theme}`}>
+      <div className={modalContentClass}>
         <button className="login-modal-close" onClick={closeModal}>&times;</button>
         <div className="login-modal-header">
           <h2>Iniciar Sesión</h2>
@@ -51,7 +61,7 @@ const LoginModal = ({ closeModal, openRegisterModal, theme}) => {
           </div>
           <div className="login-modal-actions">
             <button type="submit" className="login-modal-submit">Ingresar</button>
-            <button type="button" className="login-modal-register" onClick={handleRegisterClick}>Registrarse</button>
+            <button type="button" className="login-modal-register" onClick={openRegisterModal}>Registrarse</button>
           </div>
         </form>
       </div>
