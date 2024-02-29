@@ -39,7 +39,7 @@ services:
       MYSQL_ROOT_USER: root
       MYSQL_PASSWORD: root
     ports:
-      - "3306:3306"
+      - "1500:3306"
     networks:
       - app-network
 
