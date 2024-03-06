@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "example",
+    "password": "root",
     "database": "Myappdb",
     "host": "db",
     "dialect": "mysql",
@@ -9,7 +9,7 @@
   },
   "test": {
     "username": "root",
-    "password": "example",
+    "password": "root",
     "database": "Myappdb",
     "host": "db",
     "dialect": "mysql",
@@ -17,7 +17,7 @@
   },
   "production": {
     "username": "root",
-    "password": "example",
+    "password": "root",
     "database": "myappdb",
     "host": "db",
     "dialect": "mysql",
