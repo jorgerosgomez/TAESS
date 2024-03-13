@@ -22,7 +22,7 @@ services:
       NODE_ENV: production
       DATABASE_HOST: db
       DATABASE_USER: root 
-      DATABASE_PASSWORD: example
+      DATABASE_PASSWORD: root
       DATABASE_NAME: myappdb
     depends_on:
       - db
@@ -36,7 +36,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: myappdb
-      MYSQL_USER: root
+      MYSQL_ROOT_USER: root
       MYSQL_PASSWORD: root
     ports:
       - "1500:3306"
@@ -53,6 +53,20 @@ services:
     depends_on:
       - frontend
       - backend
+    networks:
+      - app-network
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "9000:80"
+    depends_on:
+      - db
     networks:
       - app-network
 
