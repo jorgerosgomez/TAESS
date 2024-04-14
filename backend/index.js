@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors'); // Importa CORS
 const { createUser } = require('./usercontroler');
 const { loginUser } = require('./loginUser');
+const { getEventos } = require('./scripts/getEventos');
 
 const app = express();
 app.use(express.json());
@@ -50,6 +51,21 @@ app.post('/api/login', async (req, res) => {
     res.status(401).json({ success: false, message: 'Credenciales incorrectas' });
   }
 });
+app.get('/api/eventos', async (req, res) => {
+  const { day } = req.query;
+  if (!day) {
+    return res.status(400).json({ success: false, message: 'La fecha es requerida' });
+  }
+
+  try {
+    const eventos = await getEventos(day);
+    res.json({ success: true, data: eventos });
+  } catch (error) {
+    console.error('Error al obtener los eventos:', error);
+    res.status(500).json({ success: false, message: 'Error al obtener los eventos', error: error.toString() });
+  }
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
