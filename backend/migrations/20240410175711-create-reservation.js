@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       date_reservation: {
-        type: Sequelize.DATE
+        type: Sequelize.DATETIME
       },
       id_service: {
         type: Sequelize.INTEGER
