@@ -1,37 +1,48 @@
-const db = require('./database');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const { Reservation, Barber, Service } = require('../models'); 
+const Sequelize = require('sequelize');
 
 const getEventos = async (day) => {
-  //Buscar todos los barberos
-  const barbers = await Barbers.findAll();
-  //Buscar todas las reservas de ese dia
-  const reservations = await Reservations.findAll({ where: { fecha: day } });
-  //Buscar todos los servicios
-  const services = await Services.findAll();
+  try {
+    const dateStart = new Date(day);
+    const dateEnd = new Date(day);
+    dateEnd.setDate(dateEnd.getDate() + 1);
 
-  const resources = [];
-  barbers.forEach((barber) => {
-    resources.push({
-      id: barber.id,
-      name: barber.name,
+    const reservations = await Reservation.findAll({
+      include: [
+        {
+          model: Barber,
+          as: 'barber', 
+        },
+        {
+          model: Service,
+          as: 'service',
+        }
+      ],
+      where: {
+        date_reservation: {
+          [Sequelize.Op.gte]: dateStart,
+          [Sequelize.Op.lt]: dateEnd
+        }
+      },
+      order: [['date_reservation', 'ASC']]
     });
-  });
 
-  const events = [];
-  reservations.forEach((reservation) => {
-    events.push({
-      id: reservation.id,
-      resourceId: reservation.barberId,
-      title: reservation.clientName,
-      service: services.find((service) => service.id === reservation.serviceId).name,
-      start: reservation.date_reservation,
-      //Inicio + duración del servicio
-      end: new Date(reservation.date_reservation.getTime() + services.find((service) => service.id === reservation.serviceId).duration * 60000),
-    });
-  });
+    // mapea los resultados 
+    const events = reservations.map(r => ({
+      id: r.id,
+      barberName: r.barber.name,
+      serviceName: r.service.name,
+      serviceDuration: r.service.duration,
+      servicePrice: r.service.price,
+      start: r.date_reservation,
+      end: new Date(r.date_reservation.getTime() + r.service.duration * 60000)
+    }));
 
-  return { resources, events };
+    return { success: true, events };
+  } catch (error) {
+    console.error('Error al obtener los eventos:', error);
+    return { success: false, message: 'Error al obtener los eventos', error: error.message };
+  }
 };
 
-module.exports = getEventos;
+module.exports = {getEventos};
