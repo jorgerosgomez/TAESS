@@ -1,10 +1,10 @@
 const db = require('./database');
 const bcrypt = require('bcryptjs');
 
-const createProduct = async (name, description, stock, venta, cantMin, price) => {
+const createProduct = async (name, description, stock, price, sales, stock_min) => {
   try {
-    const query = 'INSERT INTO products (name, description, stock,  venta, cantMin, price) VALUES (?, ?, ?, ?, ?, ?)';
-    const [result] = await db.execute(query, [name, description, stock, venta, cantMin, price]);
+    const query = 'INSERT INTO products (name, description, stock, price, sales, stock_min) VALUES (?, ?, ?, ?, ?, ?)';
+    const [result] = await db.execute(query, [name, description, stock, price, sales, stock_min]);
 
     return { success: true, message: 'Producto registrado con éxito', productId: result.insertId };
   } catch (error) {
@@ -15,10 +15,10 @@ const createProduct = async (name, description, stock, venta, cantMin, price) =>
 
 module.exports = { createProduct };
 
-const modifyProduct = async (name, description, stock, venta, cantMin, price, productId) => {
+const modifyProduct = async (name, description, stock, price, sales, stock_min) => {
   try {
-    const query = 'UPDATE products SET name = ?, description = ?, stock = ?, venta = ?, cantMin = ?, price = ? WHERE id = ?';
-    const [result] = await db.execute(query, [name, description, stock, venta, cantMin, price, productId]);
+    const query = 'UPDATE products SET name = ?, description = ?, stock = ?, price = ?, sales = ?, stock_min = ? WHERE id = ?';
+    const [result] = await db.execute(query, [name, description, stock, price, sales, stock_min]);
 
     return { success: true, message: 'Producto modificado con éxito', productId: result.insertId };
   } catch (error) {
@@ -57,7 +57,7 @@ const getProducts = async () => {
       // Aquí puedes procesar los resultados como desees
       return { success: true, products: results };
     } else {
-      return { success: false, message: 'No se encontraron productos en la base de datos' };
+      return { success: false, message: 'No se encontraron productos en la base de datost' };
     }
   } catch (error) {
     // Manejo de errores aquí
