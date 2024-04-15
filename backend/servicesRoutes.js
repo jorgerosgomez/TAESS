@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const servicesController = require('./servicesController');
+const servicesControler = require('./servicesControler');
 
 // RUTA LISTAR TODOS
 router.get('/services', async (req, res) => {
-    const result = await servicesController.getServices();
+    const result = await servicesControler.getServices();
     if (result.success) {
         res.status(200).json(result.services);
     } else {
@@ -14,8 +14,12 @@ router.get('/services', async (req, res) => {
 
 // RUTA CREAR
 router.post('/services', async (req, res) => {
+    if (!req.is('application/json')) {
+        return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
+      }
+
     const { name, description, duration, price } = req.body;
-    const result = await servicesController.createService(name, description, duration, price);
+    const result = await servicesControler.createService(name, description, duration, price);
     if (result.success) {
         res.status(201).json(result);
     } else {
@@ -25,9 +29,13 @@ router.post('/services', async (req, res) => {
 
 // RUTA MODIFICAR
 router.patch('/services/:id', async (req, res) => {
+    if (!req.is('application/json')) {
+        return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
+      }
+
     const { id } = req.params;
     const { name, description, duration, price } = req.body;
-    const result = await servicesController.modifyService(name, description, duration, price, id);
+    const result = await servicesControler.modifyService(name, description, duration, price, id);
     if (result.success) {
         res.status(200).json(result);
     } else {
@@ -37,8 +45,12 @@ router.patch('/services/:id', async (req, res) => {
 
 // RUTA BORRAR
 router.delete('/services/:id', async (req, res) => {
+    if (!req.is('application/json')) {
+        return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
+      }
+
     const { id } = req.params;
-    const result = await servicesController.deleteService(id);
+    const result = await servicesControler.deleteService(id);
     if (result.success) {
         res.status(200).json(result);
     } else {
@@ -52,12 +64,12 @@ module.exports = router;
 // DEBERE ANADIR LAS SIGUIENTES LINEAS A index.js PARA QUE SEAN FUNCIONALES LAS RUTAS
 /*
 
-const serviceRoutes = require('./serviceRoutes');
+const servicesRoutes = require('./servicesRoutes');
 
 const app = express(); //(esta ya deberua estar)
 
 app.use(express.json());
-app.use('/api', serviceRoutes);
+app.use('/api', servicesRoutes);
 
 
 */
