@@ -1,7 +1,7 @@
+
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Barber extends Model {
     /**
@@ -11,19 +11,25 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      // Suponiendo que tu modelo de reservaciones se llama 'Reservation'
+      Barber.hasMany(models.Reservation, {
+        foreignKey: 'id_barber',
+        as: 'reservations' // El alias que usarás cuando incluyas Reservations en tus consultas
+      });
     }
-  }
+  };
+
   Barber.init({
-    id_barber: DataTypes.INTEGER,
     name: DataTypes.STRING,
-    password: DataTypes.STRING,
+    password: DataTypes.STRING, // Asegúrate de almacenar contraseñas encriptadas
     email: DataTypes.STRING,
     phone: DataTypes.INTEGER,
-    admin ? : DataTypes.BOOLEAN,
-    available ? : DataTypes.BOOLEAN
+    admin: DataTypes.BOOLEAN,
+    available: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Barber',
   });
+
   return Barber;
 };
