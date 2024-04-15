@@ -5,7 +5,7 @@ const { loginUser } = require('./loginUser');
 const { getEventos } = require('./scripts/getEventos');
 const { getProducts } = require('./productcontroler');
 const { createProduct } = require('./productcontroler');
-const { servicesRoutes } = require('./servicesRoutes');
+const servicesRoutes = require('./servicesRoutes');
 
 const app = express();
 app.use(express.json());
