@@ -54,6 +54,63 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+app.get('/api/eventos', async (req, res) => {
+  const { day } = req.query;
+  if (!day) {
+    return res.status(400).json({ success: false, message: 'La fecha es requerida' });
+  }
+
+  try {
+    const eventos = await getEventos(day);
+    res.json({ success: true, data: eventos });
+  } catch (error) {
+    console.error('Error al obtener los eventos:', error);
+    res.status(500).json({ success: false, message: 'Error al obtener los eventos', error: error.toString() });
+  }
+});
+
+app.post('/api/products', async (req, res) => {
+
+  if (!req.is('application/json')) {
+    return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
+  }
+  
+  // Llamada a 'getproducts'
+  const result = await getProducts();
+
+  if (result.success) {
+    res.json({ success: true, message: 'Productos obtenidos con éxito', userId: result.userId });
+  } else {
+    // Considera manejar diferentes códigos de estado HTTP dependiendo del error
+    res.status(500).json({ success: false, message: result.message });
+  }
+});
+
+app.post('/api/addProduct', async (req, res) => {
+
+  if (!req.is('application/json')) {
+    return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
+  }
+
+  
+  if (Object.keys(req.body).length === 0) {
+    return res.status(400).json({ success: false, message: 'El cuerpo de la solicitud está vacío' });
+  }
+
+  // Desestructurar 'username', 'email' y 'password' del cuerpo de la solicitud
+  const { name, description, stock, price, sales, stock_min } = req.body;
+  
+  // Llamada a 'createUser'
+  const result = await createProduct(name, description, stock, price, sales, stock_min);
+
+  if (result.success) {
+    res.json({ success: true, message: 'Producto añadido con éxito', userId: result.userId });
+  } else {
+    // Considera manejar diferentes códigos de estado HTTP dependiendo del error
+    res.status(500).json({ success: false, message: result.message });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
