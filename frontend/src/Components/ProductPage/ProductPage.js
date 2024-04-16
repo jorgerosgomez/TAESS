@@ -44,6 +44,7 @@ const ProductPage = ({ theme }) => {
   return (
     <div className={productPageClass}>
       <h1>Lista de Productos</h1>
+      <button type='button' className='btn add product'>Añadir producto</button>
       <div className="product-list">
         {products.length > 0 ? (
           products.map((product) => (
