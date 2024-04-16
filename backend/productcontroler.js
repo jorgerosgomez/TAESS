@@ -50,17 +50,15 @@ module.exports = { deleteProduct };
 
 const getProducts = async () => {
   try {
-    const query = 'SELECT * FROM products'; // Cambia "products" por el nombre de tu tabla de productos
+    const query = 'SELECT * FROM Products'; 
     const [results] = await db.execute(query);
 
     if (results.length > 0) {
-      // Aquí puedes procesar los resultados como desees
       return { success: true, products: results };
     } else {
-      return { success: false, message: 'No se encontraron productos en la base de datost' };
+      return { success: false, message: 'No se encontraron productos en la base de datos' };
     }
   } catch (error) {
-    // Manejo de errores aquí
     console.error('Error al obtener los productos:', error);
     return { success: false, message: 'Error al obtener los productos' };
   }

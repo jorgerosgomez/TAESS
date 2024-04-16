@@ -73,20 +73,12 @@ app.get('/api/eventos', async (req, res) => {
   }
 });
 
-app.post('/api/products', async (req, res) => {
-
-  if (!req.is('application/json')) {
-    return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
-  }
-  
-  // Llamada a 'getproducts'
-  const result = await getProducts();
-
-  if (result.success) {
-    res.json({ success: true, message: 'Productos obtenidos con éxito', userId: result.userId });
-  } else {
-    // Considera manejar diferentes códigos de estado HTTP dependiendo del error
-    res.status(500).json({ success: false, message: result.message });
+app.get('/api/products', async (req, res) => {
+  try {
+    const products = await getProducts(); 
+    res.json({ success: true, message: 'Productos obtenidos con éxito', data: products });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error al obtener los productos', error: error.message });
   }
 });
 
