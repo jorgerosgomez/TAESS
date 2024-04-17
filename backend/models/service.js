@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       // Un servicio puede estar asociado con muchas reservas
       Service.hasMany(models.Reservation, {
         foreignKey: 'id_service',
-        as: 'reservations'
+        as: 'Reservations'
       });
     }
   }
