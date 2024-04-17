@@ -10,21 +10,26 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       id_product: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       price: {
-        type: Sequelize.FLOAT
+        type: Sequelize.FLOAT,
+        allowNull: false
       },
       amount: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP') 
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP') 
       }
     });
   },
