@@ -1,108 +1,67 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'
+import './ProductPage.css';
 
+const ProductPage = ({ theme }) => {
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-const ProductPage = () => {
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/products');
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const json = await response.json();
+        if (json.success && json.data && json.data.products) {
+          setProducts(json.data.products);
+        } else {
+          setError('No se encontraron productos');
+        }
+      } catch (error) {
+        setError(error.message);
+        console.error('Error fetching products:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-	const [products, setProducts] = useState([]);
-	const [loading, setLoading] = useState(true);
-  
-	useEffect(() => {
-	  const fetchData = async () => {
-		try {
-		  const response = await fetch('http://localhost:5000/api/products'); // Cambia la ruta a tu endpoint de productos
-		  if (response.ok) {
-			const data = await response.json();
-			setProducts(data.products);
-		  } else {
-			console.error('Error al obtener los productos:', response.statusText);
-		  }
-		  setLoading(false);
-		} catch (error) {
-		  console.error('Error al obtener los productos:', error);
-		}
-	  };
-  
-	  fetchData();
-	}, []);
-  
-	const renderProducts = () => {
-	  
-  
-		if (products.length === 0) {
-			return(
-				<div>
-					<div>
-						<div>
-							<div>
-								<div>
-									<h4>Products List
-										<Link to="/productos/añadir">Add Product</Link>
-									</h4>
-								</div>
-								<div>
-									No se encontraron productos en la base de datos
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			);
-	  	}
-  
-	  return (
-		<div>
-			<div>
-				<div>
-					<div>
-						<div>
-							<h4>Products List
-								<Link to="/">Add Product</Link>
-							</h4>
-						</div>
-						<div>
-							<table className='table table-product'>
-								<thead>
-									<tr>
-										<th>Name</th>
-										<th>Description</th>
-										<th>Stock</th>
-										<th>Price</th>
-										<th>Sales</th>
-										<th>StockMin</th>
-									</tr>
-								</thead>
-								<tbody>
-								{products.map((product) => (
-									<tr key={product.id}>
-									<td>{product.name}</td>
-									<td>{product.description}</td>
-									<td>{product.stock}</td>
-									<td>{product.price}</td>
-									<td>{product.sales}</td>
-									<td>{product.stock_min}</td>
-									<td><Link to="/" classname="btn editProd">Modify</Link></td>
-									<td><Link to="/" classname="btn delProd">Delete</Link></td>
-									</tr>
-								))}
-								</tbody>
+    fetchProducts();
+  }, []);
 
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	  );
-	};
-  
-	return (
-	  <div>
-		<h1>Tabla de Productos</h1>
-		{renderProducts()}
-	  </div>
-	);
+  const productPageClass = `product-page ${theme}`;
+  const productCardClass = `product-card ${theme}-card`; 
+
+  if (isLoading) {
+    return <div className={`loading ${theme}`}>Cargando productos...</div>;
+  }
+
+  if (error) {
+    return <div className={`error ${theme}`}>Error: {error}</div>;
+  }
+
+  return (
+    <div className={productPageClass}>
+      <h1>Lista de Productos</h1>
+      <div className="product-list">
+        {products.length > 0 ? (
+          products.map((product) => (
+            <div className={productCardClass} key={product.id}>
+              <h3>{product.name}</h3>
+              <p>{product.description}</p>
+              <div className="product-info">
+                <span>Stock: {product.stock}</span>
+                <span>Price: ${product.price.toFixed(2)}</span>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No hay productos disponibles.</p>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default ProductPage;
-  
