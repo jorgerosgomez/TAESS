@@ -6,7 +6,7 @@ const servicesControler = require('./servicesControler');
 router.get('/services', async (req, res) => {
     const result = await servicesControler.getServices();
     if (result.success) {
-        res.status(200).json(result.services);
+        res.status(200).json( {success: true, services: result.services});
     } else {
         res.status(404).json({ message: result.message });
     }
