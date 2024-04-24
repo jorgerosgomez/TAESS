@@ -17,6 +17,9 @@ router.post('/services', async (req, res) => {
     if (!req.is('application/json')) {
         return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
       }
+    if (Object.keys(req.body).length === 0) {
+        return res.status(400).json({ success: false, message: 'El cuerpo de la solicitud está vacío' });
+    }
 
     const { name, description, duration, price } = req.body;
     const result = await servicesControler.createService(name, description, duration, price);

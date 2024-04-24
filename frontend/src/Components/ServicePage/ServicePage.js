@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './ServicePage.css';
+import ServiceModal from '../../Components/ServiceModal/ServiceModal';
 
 const ServicePage = ({ theme }) => {
   const [services, setServices] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -41,6 +43,16 @@ const ServicePage = ({ theme }) => {
     return <div className={`error ${theme}`}>Error: {error}</div>;
   }
 
+  //Para controlar si el modal esta abierto
+  const openModal = () => {
+    setIsModalOpen(true);
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  }
+
+
   return (
     <div className={servicePageClass}>
       <h1>Lista de Servicios</h1>
@@ -60,6 +72,13 @@ const ServicePage = ({ theme }) => {
           <p>No hay servicios disponibles.</p>
         )}
       </div>
+
+      <button onClick={openModal} className="create-service-button">
+        Nuevo Servicio
+      </button>
+      {/* Modal */}
+      {isModalOpen && <ServiceModal closeModal={closeModal} theme={theme} />}
+
     </div>
   );
 };
