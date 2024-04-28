@@ -4,7 +4,7 @@ const db = require('./database');
 //LISTAR TODOS
 const getServices = async () => {
     try {
-      const query = 'SELECT * FROM services';
+      const query = 'SELECT * FROM Services';
       const [results] = await db.execute(query);
   
       if (results.length > 0) {
@@ -22,7 +22,7 @@ const getServices = async () => {
 //CREAR
 const createService = async (name, description, duration, price) => {
     try {
-      const query = 'INSERT INTO services ( name, description, duration, price ) VALUES (?, ?, ?, ?)';
+      const query = 'INSERT INTO Services ( name, description, duration, price ) VALUES (?, ?, ?, ?)';
       const [result] = await db.execute(query, [name, description, duration, price]);
   
       return { success: true, message: 'Servicio registrado con exito', serviceId: result.insertId };

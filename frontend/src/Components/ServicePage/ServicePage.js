@@ -14,8 +14,8 @@ const ServicePage = ({ theme }) => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const json = await response.json();
-        if (json.success && json.data && json.data.services) {
-          setServices(json.data.services);
+        if (json.success && json.services) {
+          setServices(json.services);
         } else {
           setError('No se encontraron servicios');
         }
