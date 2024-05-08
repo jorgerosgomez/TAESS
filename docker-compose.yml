@@ -6,7 +6,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "8000:80"
     depends_on:
       - backend
     networks:
@@ -56,19 +56,32 @@ services:
     networks:
       - app-network
   
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+        #phpmyadmin:
+    #image: phpmyadmin/phpmyadmin
+      #environment:
+      #PMA_HOST: db
+        #PMA_USER: root
+        #PMA_PASSWORD: root
+        #MYSQL_ROOT_PASSWORD: root
+        #MYSQL_DATABASE: root
+        #ports:
+      #- "9000:80"
+        #depends_on:
+      #- db
+        #networks:
+      #      - app-network
+
+  adminer:
+    image: adminer
+      #restart: always
     environment:
-      PMA_HOST: db
-      PMA_USER: root
-      PMA_PASSWORD: root
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - "9000:80"
+      - "8081:8080"
     depends_on:
       - db
     networks:
-      - app-network
+        - app-network
 
 volumes:
   db-data:
