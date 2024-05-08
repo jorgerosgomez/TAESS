@@ -1,0 +1,32 @@
+/*import React, { useState, useEffect } from "react";
+import BannerImage from '../../asserts/fondo.jpeg';
+import "./Contact.css";
+   
+function Contact() {
+    return (
+        <div className="contact">
+            <div
+                className="leftSide"
+                style={{ backgroundImage: `url(${BannerImage})` }}
+            ></div>
+            <div className="rightSide">
+                <h1> Contact Us</h1>
+
+                <form id="contact-form" method="POST">
+                    <label htmlFor="name">Nombre completo</label>
+                    <input name="name" placeholder="introduce el nombre completo.." type="text" />
+                    <label htmlFor="email">Email</label>
+                    <input name="email" placeholder="Introduce el emial..." type="email" />
+                    <label htmlFor="message">Mensaje</label>
+                    <textarea
+                        rows="6"
+                        placeholder="Introduce tu mensaje..."
+                        name="message"
+                        required
+                    ></textarea>
+                    <button type="submit"> Send Message</button>
+                </form>
+            </div>
+        </div>
+    );
+}*/

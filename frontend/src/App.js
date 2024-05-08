@@ -9,6 +9,8 @@ import AboutUsPage from './Components/AboutUsPage/AboutUsPage';
 import UserInfo from './Components/UserInfo/UserInfo';
 import { AuthProvider } from './Components/AuthContext/AuthContext';
 import Admin from './Components/Admin/Admin';
+import Footer from './Components/Footer/Footer';
+
 
 const App = () => {
   const [theme, setTheme] = useState(() => {
@@ -36,7 +38,8 @@ const App = () => {
           <Route path="/administracion" element={<Admin />} />
           <Route path="/user-info" element={<UserInfo />} />
           
-        </Routes>
+                  </Routes>
+                  <Footer />
       </div>
       </AuthProvider>
 
