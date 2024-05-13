@@ -46,6 +46,7 @@ const Navbar = ({ theme, setTheme }) => {
                 <li><Link to="/productos">Productos</Link></li>
                 <li><Link to="/reservas">Reservas</Link></li>
                 <li><Link to="/quienes-somos">¿Quién somos?</Link></li>
+                <li><Link to="/Contact">Contactanos</Link></li>
                 {isAuthenticated && <li><Link to="/administracion">Administración</Link></li>}
                 {isAuthenticated && <li><Link to="/servicios">Servicios</Link></li>}
             </ul>
