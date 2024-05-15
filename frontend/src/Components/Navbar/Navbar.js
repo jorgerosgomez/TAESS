@@ -44,10 +44,11 @@ const Navbar = ({ theme, setTheme }) => {
             <ul>
                 <li><Link to="/">Inicio</Link></li>
                 <li><Link to="/productos">Productos</Link></li>
+                <li><Link to="/servicios">Servicios</Link></li>
                 <li><Link to="/reservas">Reservas</Link></li>
                 <li><Link to="/quienes-somos">¿Quién somos?</Link></li>
+                <li><Link to="/Contact">Contactanos</Link></li>
                 {isAuthenticated && <li><Link to="/administracion">Administración</Link></li>}
-                {isAuthenticated && <li><Link to="/servicios">Servicios</Link></li>}
             </ul>
             <img src={user_icon} alt="user icon" className="user-icon" onClick={handleUserIconClick} />
             <img onClick={toggleMode} src={theme === 'light' ? light_mode : dark_mode} alt="toggle icon" className="toggle-icon" />

@@ -45,10 +45,6 @@ router.patch('/services/:id', async (req, res) => {
 
 // RUTA BORRAR
 router.delete('/services/:id', async (req, res) => {
-    if (!req.is('application/json')) {
-        return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
-      }
-
     const { id } = req.params;
     const result = await servicesControler.deleteService(id);
     if (result.success) {

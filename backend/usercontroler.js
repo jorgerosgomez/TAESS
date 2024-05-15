@@ -15,5 +15,17 @@ const createUser = async (username, email, password) => {
     return { success: false, message: 'Error al registrar el usuario' };
   }
 };
+const getUsers = async () => {
+  try {
+    const query = 'SELECT id, username, email, fullname, telephone FROM users';
+    const [users] = await db.execute(query);
 
-module.exports = { createUser };
+    return { success: true, users };
+  } catch (error) {
+    console.error('Error al obtener los usuarios:', error);
+    return { success: false, message: 'Error al obtener los usuarios' };
+  }
+};
+
+
+module.exports = { createUser, getUsers};
