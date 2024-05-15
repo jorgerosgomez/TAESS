@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors'); // Importa CORS
-const { createUser,  getUsers } = require('./usercontroler');
+const { createUser, getUsers, deleteUser, modifyUser } = require('./usercontroler');
 const { loginUser } = require('./loginUser');
 const { getEventos } = require('./scripts/getEventos');
 const { getProducts } = require('./productcontroler');
@@ -26,10 +26,10 @@ app.post('/api/register', async (req, res) => {
   }
 
   // Desestructurar 'username', 'email' y 'password' del cuerpo de la solicitud
-  const { username, email, password } = req.body;
+  const { fullName, username, email, password, telephone } = req.body;
   
   // Llamada a 'createUser'
-  const result = await createUser(username, email, password);
+  const result = await createUser(fullName, username, email, password, telephone);
 
   if (result.success) {
     res.json({ success: true, message: 'Usuario registrado con éxito', userId: result.userId });
@@ -63,6 +63,32 @@ app.get('/api/users', async (req, res) => {
     res.json(result.users);
   } else {
     res.status(500).json({ message: result.message });
+  }
+});
+
+app.delete('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const result = await deleteUser(id);
+  if (result.success) {
+    res.json({ success: true, message: result.message });
+  } else {
+    res.status(500).json({ success: false, message: result.message });
+  }
+});
+
+app.put('/api/users/:id', async (req, res) => {
+  if (!req.is('application/json')) {
+    return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
+  }
+
+  const { id } = req.params;
+  const { fullName, username, email, telephone } = req.body;
+  const result = await modifyUser(id, fullName, username, email, telephone);
+
+  if (result.success) {
+    res.json({ success: true, message: result.message });
+  } else {
+    res.status(500).json({ success: false, message: result.message });
   }
 });
 
