@@ -3,7 +3,6 @@
 //Recibe: idCliente
 
 Const {Cliente} = require('../models');
-
 const getCliente = async (idCliente) => {
   try {
     const cliente = await Cliente.findByPk(idCliente);
