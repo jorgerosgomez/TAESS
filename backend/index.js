@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors'); // Importa CORS
-const { createUser } = require('./usercontroler');
+const { createUser,  getUsers } = require('./usercontroler');
 const { loginUser } = require('./loginUser');
 const { getEventos } = require('./scripts/getEventos');
 const { getProducts } = require('./productcontroler');
@@ -55,6 +55,14 @@ app.post('/api/login', async (req, res) => {
     res.json({ success: true, message: 'Inicio de sesión exitoso', token: result.token });
   } else {
     res.status(401).json({ success: false, message: 'Credenciales incorrectas' });
+  }
+});
+app.get('/api/users', async (req, res) => {
+  const result = await getUsers();
+  if (result.success) {
+    res.json(result.users);
+  } else {
+    res.status(500).json({ message: result.message });
   }
 });
 

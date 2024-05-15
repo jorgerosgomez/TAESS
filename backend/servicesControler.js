@@ -36,7 +36,7 @@ const createService = async (name, description, duration, price) => {
 //MODIFICAR
 const modifyService = async (name, description, duration, price, serviceId) => {
     try {
-      const query = 'UPDATE services SET name = ?, description = ?, duration = ?, price = ? WHERE id = ?';
+      const query = 'UPDATE Services SET name = ?, description = ?, duration = ?, price = ? WHERE id = ?';
       const [result] = await db.execute(query, [name, description, duration, price, serviceId]);
   
       return { success: true, message: 'Servicio modificado con exito', serviceId: result.insertId };
@@ -48,20 +48,14 @@ const modifyService = async (name, description, duration, price, serviceId) => {
 
 
 //BORRAR
-const deleteService = async (serviceId) => {
-    try {
-      const query = 'DELETE FROM services WHERE id = ?';
-      const [result] = await db.execute(query, [serviceId]);
-  
-      if (result.affectedRows > 0) {
-        return { success: true, message: 'Servicio eliminado' };
-      } else {
-        return { success: false, message: 'No existe servicio con ese ID' };
-      }
-    } catch (error) {
-      console.error('Error al eliminar el servicio:', error);
-      return { success: false, message: 'Error al eliminar el servicio' };
-    }
+const deleteService = async (id) => {
+  try {
+    await db.execute('DELETE FROM Services WHERE id = ?', [id]);
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting service:', error);
+    return { success: false, message: 'Error deleting service' };
+  }
 };
 
 module.exports = { getServices, createService, modifyService, deleteService };
