@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import UsersTable from './UsersTable';
+import ServicesTable from './ServicesTable';
 import { Drawer, List, ListItem, ListItemText, CssBaseline, Toolbar, Container } from '@mui/material';
 
 const drawerWidth = 240;
@@ -24,7 +25,7 @@ const Admin = ({ theme }) => {
       case 'Reservations':
         return <div>Content for Reservations</div>;
       case 'Services':
-        return <div>Content for Services</div>;
+        return <ServicesTable theme={theme} />  ;
       case 'Users':
         return <UsersTable theme={theme} />;
       default:
