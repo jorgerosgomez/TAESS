@@ -7,6 +7,8 @@ const RegisterModal = ({ closeModal, theme }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [telephone, setTelephone] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,7 +18,7 @@ const RegisterModal = ({ closeModal, theme }) => {
     }
     
     try {
-      const data = await registerUser(username, email, password);
+      const data = await registerUser(fullName, username, email, password, telephone);
       if (data.success) {
         console.log('Usuario registrado con éxito:', data);
         closeModal();
@@ -39,6 +41,13 @@ const RegisterModal = ({ closeModal, theme }) => {
         <h2>Registrarse</h2>
         <form onSubmit={handleSubmit} className="register-modal-form">
           {/* Campos para el registro */}
+          <input
+            type="text"
+            placeholder="Nombre Completo"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            required
+          />
           <input
             type="text"
             placeholder="Usuario"
@@ -65,6 +74,13 @@ const RegisterModal = ({ closeModal, theme }) => {
             placeholder="Confirmar Contraseña"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+          <input
+            type="number"
+            placeholder="Teléfono"
+            value={telephone}
+            onChange={(e) => setTelephone(e.target.value)}
             required
           />
           <button type="submit">Crear Cuenta</button>

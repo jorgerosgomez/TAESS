@@ -1,7 +1,7 @@
-const registerUser = async (username, email, password) => {
+const registerUser = async (fullName, username, email, password, telephone) => {
   // Incluye el dominio completo y el puerto en el endpoint
   const endpoint = 'http://localhost:5000/api/register';
-  const payload = JSON.stringify({ username, email, password });
+  const payload = JSON.stringify({ fullName, username, email, password, telephone });
 
   try {
       const response = await fetch(endpoint, {

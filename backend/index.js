@@ -26,10 +26,10 @@ app.post('/api/register', async (req, res) => {
   }
 
   // Desestructurar 'username', 'email' y 'password' del cuerpo de la solicitud
-  const { username, email, password } = req.body;
+  const { fullName, username, email, password, telephone } = req.body;
   
   // Llamada a 'createUser'
-  const result = await createUser(username, email, password);
+  const result = await createUser(fullName, username, email, password, telephone);
 
   if (result.success) {
     res.json({ success: true, message: 'Usuario registrado con éxito', userId: result.userId });

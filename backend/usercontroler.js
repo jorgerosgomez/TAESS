@@ -1,13 +1,13 @@
 const db = require('./database');
 const bcrypt = require('bcryptjs');
 
-const createUser = async (username, email, password) => {
+const createUser = async (fullName, username, email, password, telephone) => {
   try {
     // Genera un hash de la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
-    const [result] = await db.execute(query, [username, email, hashedPassword]);
+    const query = 'INSERT INTO users (fullName, username, email, password, telephone) VALUES (?, ?, ?, ?, ?)';
+    const [result] = await db.execute(query, [fullName, username, email, password, telephone]);
 
     return { success: true, message: 'Usuario registrado con éxito', userId: result.insertId };
   } catch (error) {
