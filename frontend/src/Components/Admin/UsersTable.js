@@ -26,7 +26,7 @@ const UsersTable = ({ theme }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [formState, setFormState] = useState({ id: '', username: '', password: '', fullname: '', email: '', telephone: '' });
+  const [formState, setFormState] = useState({ id: '', username: '', password: '', fullName: '', email: '', telephone: '' });
 
   useEffect(() => {
     fetchData();
@@ -44,15 +44,29 @@ const UsersTable = ({ theme }) => {
   };
 
   const handleCreateOrUpdate = async () => {
+    const { username, password, fullName, email, telephone } = formState;
+    if (!username || !password || !fullName || !email || !telephone) {
+      alert('Todos los campos son requeridos');
+      return;
+    }
+
     try {
       await createOrUpdateUser(formState);
       fetchData();
       setOpen(false);
-      setFormState({ id: '', username: '', password: '', fullname: '', email: '', telephone: '' });
+      setFormState({ id: '', username: '', password: '', fullName: '', email: '', telephone: '' });
     } catch (error) {
       console.error('Error saving user:', error);
+      if (error.message === 'DuplicateUsername') {
+        alert('El nombre de usuario ya está registrado. Por favor, use uno diferente.');
+      } else if (error.message === 'DuplicateEmail') {
+        alert('El email ya está registrado. Por favor, use uno diferente.');
+      } else {
+        alert('Hubo un problema al guardar el usuario.');
+      }
     }
   };
+
 
   const handleEdit = (user) => {
     setFormState(user);
@@ -177,8 +191,8 @@ const UsersTable = ({ theme }) => {
             label="Fullname"
             type="text"
             fullWidth
-            value={formState.fullname}
-            onChange={(e) => setFormState({ ...formState, fullname: e.target.value })}
+            value={formState.fullName}
+            onChange={(e) => setFormState({ ...formState, fullName: e.target.value })}
             style={{ marginBottom: '16px' }}
           />
           <TextField

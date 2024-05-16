@@ -6,6 +6,10 @@ const { getEventos } = require('./scripts/getEventos');
 const { getProducts } = require('./productcontroler');
 const { createProduct } = require('./productcontroler');
 const servicesRoutes = require('./servicesRoutes');
+const ordersRoutes = require('./ordersRoutes');
+const orderlinesRoutes = require('./orderlinesRoutes');
+const reservationsRoutes = require('./reservationsRoutes');
+const barbersRoutes = require('./barbersRoutes');
 
 const app = express();
 app.use(express.json());
@@ -13,6 +17,18 @@ app.use(cors());
 
 //SE MONTAN LAS RUTAS DE SERVICIOS EN /api
 app.use('/api', servicesRoutes);
+
+//SE MONTAN LAS RUTAS DE ORDERS EN /api
+app.use('/api', ordersRoutes);
+
+//SE MONTAN LAS RUTAS DE ORDERLINES EN /api
+app.use('/api', orderlinesRoutes);
+
+//SE MONTAN LAS RUTAS DE RESERVATIONS EN /api
+app.use('/api', reservationsRoutes);
+
+//SE MONTAN LAS RUTAS DE BARBERS EN /api
+app.use('/api', barbersRoutes);
 
 app.post('/api/register', async (req, res) => {
 
@@ -66,25 +82,30 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-app.delete('/api/users/:id', async (req, res) => {
-  const { id } = req.params;
-  const result = await deleteUser(id);
+app.post('/api/users', async (req, res) => {
+  const { fullName, username, email, password, telephone } = req.body;
+  const result = await createUser(fullName, username, email, password, telephone);
   if (result.success) {
-    res.json({ success: true, message: result.message });
+    res.status(201).json(result);
   } else {
-    res.status(500).json({ success: false, message: result.message });
+    res.status(500).json({ message: result.message });
   }
 });
 
 app.put('/api/users/:id', async (req, res) => {
-  if (!req.is('application/json')) {
-    return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
-  }
-
   const { id } = req.params;
   const { fullName, username, email, telephone } = req.body;
   const result = await modifyUser(id, fullName, username, email, telephone);
+  if (result.success) {
+    res.json(result);
+  } else {
+    res.status(500).json({ message: result.message });
+  }
+});
 
+app.delete('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const result = await deleteUser(id);
   if (result.success) {
     res.json({ success: true, message: result.message });
   } else {
