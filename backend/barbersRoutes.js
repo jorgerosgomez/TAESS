@@ -19,7 +19,7 @@ router.post('/babers', async (req, res) => {
       }
 
     const { name, password, email, phone, admin, available } = req.body;
-    const result = await barbersControler.createBarber(name, password, email, phone, admin, available);
+    const result = await barbersControler.createBarber(name, email, phone, available);
     if (result.success) {
         res.status(201).json(result);
     } else {
@@ -34,8 +34,8 @@ router.patch('/barbers/:id', async (req, res) => {
       }
 
     const { id } = req.params;
-    const { name, password, email, phone, admin, available } = req.body;
-    const result = await babersControler.modifyBarber(id, name, password, email, phone, admin, available);
+    const { name, email, phone, available } = req.body;
+    const result = await babersControler.modifyBarber(id, name, email, phone, available);
     if (result.success) {
         res.status(200).json(result);
     } else {

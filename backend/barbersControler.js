@@ -13,8 +13,6 @@ const getBarbers = async () => {
         name: barbero.name,
         phone: barbero.phone,
         email: barbero.email,
-        password: barbero.password,
-        admin: barbero.admin,
         available: barbero.available,
       };
     });
@@ -41,8 +39,6 @@ const getBarber = async (idBarbero) => {
       name: barbero.name,
       phone: barbero.phone,
       email: barbero.email,
-      password: barbero.password,
-      admin: barbero.admin,
       available: barbero.available,
     };
 
@@ -56,17 +52,12 @@ const getBarber = async (idBarbero) => {
 // CREAR
 const createBarber = async (name, password, email, phone, admin, available) => {
   try {
-    // Encripta la contraseña
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     // Crea el nuevo barbero
     const barbero = await Barber.create({
       name: name,
-      password: hashedPassword,
       email: email,
       phone: phone,
       available: available,
-      admin: admin,
     });
 
     return { success: true, barbero: barbero };
@@ -94,19 +85,11 @@ const modifyBarber = async (id, name, password, email, phone, admin, available) 
     if (name) {
       barbero.name = name;
     }
-    if (password) {
-      // Encripta la nueva contraseña
-      const hashedPassword = await bcrypt.hash(password, 10);
-      barbero.password = hashedPassword;
-    }
     if (email) {
       barbero.email = email;
     }
     if (phone) {
       barbero.phone = phone;
-    }
-    if (admin !== undefined) {
-      barbero.admin = admin;
     }
     if (available !== undefined) {
       barbero.available = available;
