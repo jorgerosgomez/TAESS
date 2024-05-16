@@ -82,25 +82,30 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-app.delete('/api/users/:id', async (req, res) => {
-  const { id } = req.params;
-  const result = await deleteUser(id);
+app.post('/api/users', async (req, res) => {
+  const { fullName, username, email, password, telephone } = req.body;
+  const result = await createUser(fullName, username, email, password, telephone);
   if (result.success) {
-    res.json({ success: true, message: result.message });
+    res.status(201).json(result);
   } else {
-    res.status(500).json({ success: false, message: result.message });
+    res.status(500).json({ message: result.message });
   }
 });
 
 app.put('/api/users/:id', async (req, res) => {
-  if (!req.is('application/json')) {
-    return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
-  }
-
   const { id } = req.params;
   const { fullName, username, email, telephone } = req.body;
   const result = await modifyUser(id, fullName, username, email, telephone);
+  if (result.success) {
+    res.json(result);
+  } else {
+    res.status(500).json({ message: result.message });
+  }
+});
 
+app.delete('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const result = await deleteUser(id);
   if (result.success) {
     res.json({ success: true, message: result.message });
   } else {
