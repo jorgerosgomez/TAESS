@@ -1,6 +1,7 @@
 const db = require('./database');
 const bcrypt = require('bcryptjs');
 
+
 const createUser = async (fullName, username, email, password, telephone) => {
   try {
     if (!fullName) throw new Error('El campo fullName es requerido');
@@ -9,17 +10,16 @@ const createUser = async (fullName, username, email, password, telephone) => {
     if (!password) throw new Error('El campo password es requerido');
     if (!telephone) throw new Error('El campo telephone es requerido');
 
-  
     const hashedPassword = await bcrypt.hash(password, 10);
+    const administrador = false;
 
-    const query = 'INSERT INTO users (fullName, username, email, password, telephone) VALUES (?, ?, ?, ?, ?)';
-    const [result] = await db.execute(query, [fullName, username, email, hashedPassword, telephone]);
+    const query = 'INSERT INTO users (fullName, username, email, password, telephone, administrador) VALUES (?, ?, ?, ?, ?, ?)';
+    const [result] = await db.execute(query, [fullName, username, email, hashedPassword, telephone, administrador]);
 
     return { success: true, message: 'Usuario registrado con éxito', userId: result.insertId };
   } catch (error) {
     console.error('Error al registrar el usuario:', error);
 
-   
     if (error.code === 'ER_DUP_ENTRY') {
       if (error.message.includes('username')) {
         return { success: false, message: 'DuplicateUsername' };
@@ -33,7 +33,6 @@ const createUser = async (fullName, username, email, password, telephone) => {
   }
 };
 
-
 const modifyUser = async (id, fullName, username, email, telephone) => {
   try {
     if (!id) throw new Error('El campo id es requerido');
@@ -42,8 +41,10 @@ const modifyUser = async (id, fullName, username, email, telephone) => {
     if (!email) throw new Error('El campo email es requerido');
     if (!telephone) throw new Error('El campo telephone es requerido');
 
-    const query = 'UPDATE users SET fullName = ?, username = ?, email = ?, telephone = ? WHERE id = ?';
-    const [result] = await db.execute(query, [fullName, username, email, telephone, id]);
+    const administrador = false;
+
+    const query = 'UPDATE users SET fullName = ?, username = ?, email = ?, telephone = ?, administrador = ? WHERE id = ?';
+    const [result] = await db.execute(query, [fullName, username, email, telephone, administrador, id]);
     if (result.affectedRows === 0) {
       return { success: false, message: 'Usuario no encontrado' };
     }
@@ -51,12 +52,11 @@ const modifyUser = async (id, fullName, username, email, telephone) => {
   } catch (error) {
     console.error('Error al actualizar el usuario:', error);
 
-    // Detectar error de entrada duplicada
-    if (error.message.includes('Duplicate entry')) {
-      if (error.message.includes('for key \'username\'')) {
+    if (error.code === 'ER_DUP_ENTRY') {
+      if (error.message.includes('username')) {
         return { success: false, message: 'DuplicateUsername' };
       }
-      if (error.message.includes('for key \'email\'')) {
+      if (error.message.includes('email')) {
         return { success: false, message: 'DuplicateEmail' };
       }
     }
@@ -67,7 +67,7 @@ const modifyUser = async (id, fullName, username, email, telephone) => {
 
 const getUsers = async () => {
   try {
-    const query = 'SELECT id, username, email, fullname, telephone FROM users';
+    const query = 'SELECT id, username, email, fullname, administrador, telephone FROM users';
     const [users] = await db.execute(query);
 
     return { success: true, users };

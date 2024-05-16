@@ -17,6 +17,8 @@ import {
   Typography,
   Divider,
   Paper,
+  Checkbox,
+  FormControlLabel,
   IconButton,
 } from '@mui/material';
 import { CSVLink } from 'react-csv';
@@ -26,7 +28,8 @@ const UsersTable = ({ theme }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [formState, setFormState] = useState({ id: '', username: '', password: '', fullName: '', email: '', telephone: '' });
+  const [formState, setFormState] = useState({ id: '', username: '', password: '', fullname: '', email: '', telephone: '', administrador: false });
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -54,7 +57,7 @@ const UsersTable = ({ theme }) => {
       await createOrUpdateUser(formState);
       fetchData();
       setOpen(false);
-      setFormState({ id: '', username: '', password: '', fullName: '', email: '', telephone: '' });
+      setFormState({ id: '', username: '', password: '', fullName: '', email: '', telephone: ''});
     } catch (error) {
       console.error('Error saving user:', error);
       if (error.message === 'DuplicateUsername') {
@@ -66,7 +69,6 @@ const UsersTable = ({ theme }) => {
       }
     }
   };
-
 
   const handleEdit = (user) => {
     setFormState(user);
@@ -89,6 +91,7 @@ const UsersTable = ({ theme }) => {
       { Header: 'Email', accessor: 'email' },
       { Header: 'Fullname', accessor: 'fullname' },
       { Header: 'Telephone', accessor: 'telephone' },
+      { Header: 'Administrador', accessor: 'administrador', Cell: ({ value }) => (value === 1 ? 'Sí' : 'No') },
       {
         Header: 'Actions',
         Cell: ({ row }) => (
@@ -126,7 +129,10 @@ const UsersTable = ({ theme }) => {
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            setFormState({ id: '', username: '', password: '', fullname: '', email: '', telephone: '', administrador: false });
+            setOpen(true);
+          }}
         >
           Add User
         </Button>
@@ -168,6 +174,7 @@ const UsersTable = ({ theme }) => {
           {formState.id ? 'Edit User' : 'Add User'}
         </DialogTitle>
         <DialogContent>
+          {error && <Typography color="error">{error}</Typography>}
           <TextField
             margin="dense"
             label="Username"
@@ -175,6 +182,7 @@ const UsersTable = ({ theme }) => {
             fullWidth
             value={formState.username}
             onChange={(e) => setFormState({ ...formState, username: e.target.value })}
+            required
             style={{ marginBottom: '16px' }}
           />
           <TextField
@@ -184,6 +192,7 @@ const UsersTable = ({ theme }) => {
             fullWidth
             value={formState.password}
             onChange={(e) => setFormState({ ...formState, password: e.target.value })}
+            required
             style={{ marginBottom: '16px' }}
           />
           <TextField
@@ -193,6 +202,7 @@ const UsersTable = ({ theme }) => {
             fullWidth
             value={formState.fullName}
             onChange={(e) => setFormState({ ...formState, fullName: e.target.value })}
+            required
             style={{ marginBottom: '16px' }}
           />
           <TextField
@@ -202,6 +212,7 @@ const UsersTable = ({ theme }) => {
             fullWidth
             value={formState.email}
             onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+            required
             style={{ marginBottom: '16px' }}
           />
           <TextField
@@ -211,6 +222,7 @@ const UsersTable = ({ theme }) => {
             fullWidth
             value={formState.telephone}
             onChange={(e) => setFormState({ ...formState, telephone: e.target.value })}
+            required
             style={{ marginBottom: '16px' }}
           />
         </DialogContent>

@@ -27,6 +27,11 @@ module.exports = {
         allowNull: false,
         unique: true
       },
+      administrador: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
       telephone: {
         type: Sequelize.INTEGER,
         allowNull: false
