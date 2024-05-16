@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import UsersTable from './UsersTable';
 import ServicesTable from './ServicesTable';
+import BarbersTable from './BarbersTable';
 import { Drawer, List, ListItem, ListItemText, CssBaseline, Toolbar, Container } from '@mui/material';
 
 const drawerWidth = 240;
@@ -15,9 +16,7 @@ const Admin = ({ theme }) => {
   const renderTableContent = () => {
     switch (selectedTable) {
       case 'Barbers':
-        return <div>Content for Barbers</div>;
-      case 'OrderLines':
-        return <div>Content for OrderLines</div>;
+        return <BarbersTable theme={theme} />;
       case 'Orders':
         return <div>Content for Orders</div>;
       case 'Products':
