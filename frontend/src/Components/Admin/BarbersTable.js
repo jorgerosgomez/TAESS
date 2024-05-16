@@ -18,6 +18,8 @@ import {
   Divider,
   Paper,
   IconButton,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material';
 import { CSVLink } from 'react-csv';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
@@ -182,12 +184,14 @@ const BarbersTable = ({ theme }) => {
             onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
             style={{ marginBottom: '16px' }}
           />
-          <TextField
-            margin="dense"
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={formState.available}
+                onChange={(e) => setFormState({ ...formState, available: e.target.checked })}
+              />
+            }
             label="Available"
-            type="checkbox"
-            checked={formState.available}
-            onChange={(e) => setFormState({ ...formState, available: e.target.checked })}
             style={{ marginBottom: '16px' }}
           />
         </DialogContent>
