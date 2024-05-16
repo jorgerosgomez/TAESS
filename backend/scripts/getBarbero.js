@@ -2,18 +2,21 @@
 //
 //Recibe: idPeluquero
 
-Const {Peluquero} = require('../models');
+const {Barber} = require('../models');
 
-const getPeluquero = async (idPeluquero) => {
+const getBarbero = async (idBarbero) => {
   try {
-    const peluquero = await Peluquero.findByPk(idPeluquero);
+    const barbero = await Barber.findByPk(idBarbero);
 
     // mapea los resultados 
-    const peluqueroMapped = {
-      id: peluquero.id,
-      nombre: peluquero.nombre,
-      telefono: peluquero.telefono,
-      email: peluquero.email,
+    const barberoMapped = {
+      id_barber: barbero.id_barber,
+      name: barbero.name,
+      phone: barbero.phone,
+      email: barbero.email,
+      password: barbero.password,
+      admin: barbero.admin,
+      available: barbero.available,
     };
 
     return { success: true, peluquero: peluqueroMapped };

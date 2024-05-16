@@ -2,23 +2,22 @@
 //
 //Recibe: nombre, contraseña, email, telefono, horario, administrador?, disponible?
 
-const Barbero = require('../models');
+const Barber = require('../models');
 const bcrypt = require('bcrypt');
 
-module.exports = async function addBarbero(nombre, contraseña, email, telefono, horario, administrador, disponible) {
+const createBarbero = async function (name, password, email, phone, admin, available) {
   try {
     // Encripta la contraseña
-    const hashedPassword = await bcrypt.hash(contraseña, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Crea el nuevo barbero
-    const barbero = await Barbero.create({
-      nombre: nombre,
-      contraseña: hashedPassword,
+    const barbero = await Barber.create({
+      name: name,
+      password: hashedPassword,
       email: email,
-      telefono: telefono,
-      horario: horario,
-      administrador: administrador,
-      disponible: disponible,
+      phone: phone,
+      available: available,
+      admin: admin,
     });
 
     return { success: true, barbero: barbero };

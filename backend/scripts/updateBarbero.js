@@ -2,15 +2,15 @@
 //
 //Recibe un id y nombre, contraseña, email, telefono, horario, administrador?, disponible?; correspondientes a los campos del modelo Barbero, para actualizar un registro en la base de datos.
 
-const Barbero = require('../../models');
-const { Op } = require("sequelize");
+const Barber = require('../../models');
+const Sequelize = require("sequelize");
 
-module.exports = async function updateBarbero(id, nombre, contraseña, email, telefono, horario, administrador, disponible) {
+const modifyBarbero = async function (id, name, password, email, phone, admin, available) {
   try {
     // Busca el barbero por id
-    const barbero = await Barbero.findOne({
+    const barbero = await Barber.findOne({
       where: {
-        id: id
+        id_barber: id
       }
     });
 
@@ -19,26 +19,23 @@ module.exports = async function updateBarbero(id, nombre, contraseña, email, te
     }
 
     // Actualiza los campos
-    if (nombre) {
-      barbero.nombre = nombre;
+    if (name) {
+      barbero.name = nombre;
     }
-    if (contraseña) {
-      barbero.contraseña = contraseña;
+    if (password) {
+      barbero.password = password;
     }
     if (email) {
       barbero.email = email;
     }
-    if (telefono) {
-      barbero.telefono = telefono;
+    if (phone) {
+      barbero.phone = phone;
     }
-    if (horario) {
-      barbero.horario = horario;
+    if (admin) {
+      barbero.admin = admin;
     }
-    if (administrador) {
-      barbero.administrador = administrador;
-    }
-    if (disponible) {
-      barbero.disponible = disponible;
+    if (available) {
+      barbero.available = available;
     }
 
     await barbero.save();

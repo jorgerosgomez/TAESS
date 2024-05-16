@@ -1,4 +1,5 @@
 const Reserva = require('../models');
+const Sequelize = require('sequelize');
 
 //Función que recibe los campos de una nueva reserva y la agrega a la base de datos
 //
@@ -130,3 +131,5 @@ const modifyReserva = async function (idReserva, idCliente, idBarbero, fecha, se
     return { success: false, message: 'Error al actualizar la reserva', error: error.message };
   }
 }
+
+moodule.exports = { createReserva, deleteReserva, getReserva, getReservas, modifyReserva };
