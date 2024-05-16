@@ -1,4 +1,4 @@
-const Barber = require('../models');
+const Barber = require('models/barber');
 const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
 

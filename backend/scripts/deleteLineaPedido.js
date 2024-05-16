@@ -2,11 +2,11 @@
 //
 //Recibe: id
 
-Const LineaPedido = require('../models');
+const OrderLine= require('../models');
 
-module.exports = async function deleteLineaPedido(id) {
+const deleteOrderLine = async function (id) {
   try{
-    const lineaPedido = await LineaPedido.findByPk(id);
+    const lineaPedido = await OrderLine.findByPk(id);
 
     if(!lineaPedido){
       return { success: false, message: 'No se encontró la línea de pedido' };

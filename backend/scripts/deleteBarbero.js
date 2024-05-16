@@ -4,7 +4,7 @@
 
 const Barbero = require('../models');
 
-module.exports = async function deleteBarbero(id) {
+const deleteBarbero = async function (id) {
   try{
     const barbero = await Barbero.findByPk(id);
 

@@ -2,15 +2,15 @@
 //
 //Recibe: idCliente, idBarbero, fecha_pedido.
 
-const LineaPedido = require('../models');
+const OrderLine = require('../models');
 
-module.exports = async function addLineaPedido(idCliente, idBarbero, fecha_pedido) {
+const createOrderLine = async function (idCliente, idBarbero, fecha_pedido) {
   try {
     // Crea la nueva línea de pedido
-    const lineaPedido = await LineaPedido.create({
-      idCliente: idCliente,
-      idBarbero: idBarbero,
-      fecha_pedido: fecha_pedido,
+    const lineaPedido = await OrderLine.create({
+      id_client: idCliente,
+      id_barber: idBarbero,
+      date_order: fecha_pedido,
     });
 
     return { success: true, lineaPedido: lineaPedido };

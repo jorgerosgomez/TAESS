@@ -2,12 +2,12 @@
 //
 //Recibe: id, idCliente, idBarbero, fecha_pedido.
 
-const LineaPedido = require('../../models');
+const OrderLine = require('../../models');
 
-module.exports = async function updateLineaPedido(id, idCliente, idBarbero, fecha_pedido) {
+const modifyOrderLine = async function (id, idCliente, idBarbero, fecha_pedido) {
   try {
     // Busca la linea de pedido por id
-    const lineaPedido = await LineaPedido.findOne({
+    const lineaPedido = await OrderLine.findOne({
       where: {
         id: id
       }
@@ -17,13 +17,13 @@ module.exports = async function updateLineaPedido(id, idCliente, idBarbero, fech
     }
     // Actualiza los campos
     if (idCliente) {
-      lineaPedido.idCliente = idCliente;
+      lineaPedido.id_client = idCliente;
     }
     if (idBarbero) {
-      lineaPedido.idBarbero = idBarbero;
+      lineaPedido.id_barber = idBarbero;
     }
     if (fecha_pedido) {
-      lineaPedido.fecha_pedido = fecha_pedido;
+      lineaPedido.date_order = fecha_pedido;
     }
     await lineaPedido.save();
     return { success: true, lineaPedido: lineaPedido };

@@ -1,19 +1,17 @@
 //Función que extrae todas las líneas de pedido de la base de datos y las devuelve en un objeto JSON
 
-const {LineaPedido} = require('../models');
+const Orderline = require('../models');
 
-const getLineaPedidos = async () => {
+const getOrderlines = async () => {
   try {
-    const lineaPedidos = await LineaPedido.findAll();
+    const lineaPedidos = await Orderline.findAll();
 
     // mapea los resultados 
     const lineaPedidosMapped = lineaPedidos.map(lineaPedido => {
       return {
-        id: lineaPedido.id,
-        cantidad: lineaPedido.cantidad,
-        precio: lineaPedido.precio,
-        productoId: lineaPedido.productoId,
-        pedidoId: lineaPedido.pedidoId,
+        id_client: lineaPedido.id_client,
+        id_barber: lineaPedido.id_barber,
+        date_order: lineaPedido.date_order,
       };
     });
 

@@ -2,19 +2,18 @@
 //
 //Recibe: idLineaPedido
 
-const {LineaPedido} = require('../models');
+const Orderline = require('../models');
 
-const getLineaPedido = async (idLineaPedido) => {
+const getOrderline = async (idLineaPedido) => {
   try {
     const lineaPedido = await LineaPedido.findByPk(idLineaPedido);
 
     // mapea los resultados 
     const lineaPedidoMapped = {
       id: lineaPedido.id,
-      cantidad: lineaPedido.cantidad,
-      precio: lineaPedido.precio,
-      productoId: lineaPedido.productoId,
-      pedidoId: lineaPedido.pedidoId,
+      id_client: lineaPedido.id_client,
+      id_barber: lineaPedido.id_barber,
+      date_order: lineaPedido.date_order,
     };
 
     return { success: true, lineaPedido: lineaPedidoMapped };
