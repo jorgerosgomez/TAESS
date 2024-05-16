@@ -56,19 +56,24 @@ app.post('/api/register', async (req, res) => {
 });
 
 app.post('/api/login', async (req, res) => {
- 
-  console.log('Se recibió una solicitud de inicio de sesión')
+  console.log('Se recibió una solicitud de inicio de sesión');
+
   if (!req.is('application/json')) {
     return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
   }
 
   const { username, password } = req.body;
 
-  // Llama a la función controladora para iniciar sesión
+ 
   const result = await loginUser(username, password);
 
   if (result.success) {
-    res.json({ success: true, message: 'Inicio de sesión exitoso', token: result.token });
+    res.json({ 
+      success: true, 
+      message: 'Inicio de sesión exitoso', 
+      token: result.token, 
+      user: result.user 
+    });
   } else {
     res.status(401).json({ success: false, message: 'Credenciales incorrectas' });
   }
