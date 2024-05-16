@@ -2,10 +2,10 @@
 //
 //Recibe: idPedido
 
-Const { Pedido } = require('../models');
+const Order = require('../models');
 
-module.exports = async (idPedido) => {
-    const pedido = await Pedido.findByPk(idPedido);
+const deleteOrder = async (idPedido) => {
+    const pedido = await Order.findByPk(idPedido);
     if (!pedido) {
         throw new Error('No existe el pedido');
     }

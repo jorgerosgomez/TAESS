@@ -1,4 +1,4 @@
-const OrderLine = require('models/orderline');
+const OrderLine = require('./models/orderline');
 const Sequelize = require('sequelize');
 
 //LISTAR TODOS
@@ -20,7 +20,7 @@ const getOrderLines = async () => {
     console.error('Error al obtener las líneas de pedido:', error);
     return { success: false, message: 'Error al obtener las líneas de pedido', error: error.message };
   }
-}
+};
 
 //LISTAR UNO POR ID
 const getOrderLine = async (idLineaPedido) => {
@@ -40,7 +40,7 @@ const getOrderLine = async (idLineaPedido) => {
     console.error('Error al obtener la linea de pedido:', error);
     return { success: false, message: 'Error al obtener la linea de pedido', error: error.message };
   }
-}
+};
 
 //CREAR
 const createOrderLine = async function (idCliente, idBarbero, fecha_pedido) {
@@ -57,7 +57,7 @@ const createOrderLine = async function (idCliente, idBarbero, fecha_pedido) {
     console.error('Error al agregar la línea de pedido:', error);
     return { success: false, message: 'Error al agregar la línea de pedido', error: error.message };
   }
-}
+};
 
 //MODIFICAR
 const modifyOrderLine = async function (id, idCliente, idBarbero, fecha_pedido) {
@@ -88,7 +88,7 @@ const modifyOrderLine = async function (id, idCliente, idBarbero, fecha_pedido) 
     console.error('Error al actualizar la linea de pedido:', error);
     return { success: false, message: 'Error al actualizar la linea de pedido', error: error.message };
   }
-}
+};
 
 
 //BORRAR
@@ -108,7 +108,7 @@ const deleteOrderLine = async function (id) {
     console.error('Error al eliminar la línea de pedido:', error);
     return { success: false, message: 'Error al eliminar la línea de pedido', error: error.message };
   }
-}
+};
 
 module.exports = { getOrderLines, getOrderLine, createOrderLine, modifyOrderLine, deleteOrderLine};
 

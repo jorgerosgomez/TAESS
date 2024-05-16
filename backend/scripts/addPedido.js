@@ -2,16 +2,15 @@
 //
 //Recibe: producto, precio, cantidad, idLineaPedido.
 
-const Pedido = require('../models');
+const Order = require('../models');
 
-module.exports = async function addPedido(producto, precio, cantidad, idLineaPedido) {
+const createOrder = async function (producto, precio, cantidad) {
   try {
     // Crea el nuevo pedido
     const pedido = await Pedido.create({
-      producto: producto,
-      precio: precio,
-      cantidad: cantidad,
-      idLineaPedido: idLineaPedido,
+      id_product: producto,
+      price: precio,
+      amount: cantidad,
     });
 
     return { success: true, pedido: pedido };

@@ -1,18 +1,18 @@
 //Función que extrae los pedidos de la base de datos y los devielve en un objeto JSON
 
-const {Pedido} = require('../models');
+const Order = require('models/order');
 
-const getPedidos = async () => {
+const getOrders = async () => {
   try {
-    const pedidos = await Pedido.findAll();
+    const pedidos = await Order.findAll();
 
     // mapea los resultados 
     const pedidosMapped = pedidos.map(pedido => {
       return {
-        id: pedido.id,
-        fecha: pedido.fecha,
-        estado: pedido.estado,
-        clienteId: pedido.clienteId,
+        id_order: pedido.id_order,
+        id_producto: pedido.id_producto,
+        price: pedido.price,
+        amount: pedido.amount,
       };
     });
 

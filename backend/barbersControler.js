@@ -1,4 +1,4 @@
-const Barber = require('models/barber');
+const Barber = require('./models/barber');
 const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
 
@@ -48,7 +48,7 @@ const getBarber = async (idBarbero) => {
     console.error('Error al obtener el peluquero:', error);
     return { success: false, message: 'Error al obtener el peluquero', error: error.message };
   }
-}
+};
 
 
 //CREAR
@@ -72,7 +72,7 @@ const createBarber = async function (name, password, email, phone, admin, availa
     console.error('Error al agregar el barbero:', error);
     return { success: false, message: 'Error al agregar el barbero', error: error.message };
   }
-}
+};
 
 //MODIFICAR
 const modifyBarber = async function (id, name, password, email, phone, admin, available) {
@@ -115,7 +115,7 @@ const modifyBarber = async function (id, name, password, email, phone, admin, av
     console.error('Error al actualizar el barbero:', error);
     return { success: false, message: 'Error al actualizar el barbero', error: error.message };
   }
-}
+};
 
 
 //BORRAR
@@ -135,7 +135,7 @@ const deleteBarber = async function (id) {
     console.error('Error al eliminar el barbero:', error);
     return { success: false, message: 'Error al eliminar el barbero', error: error.message };
   }
-}
+};
 
 module.exports = { getBarbers, getBarber, createBarber, modifyBarber, deleteBarber };
 

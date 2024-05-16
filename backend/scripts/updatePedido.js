@@ -2,14 +2,14 @@
 //
 //Recibe: id, producto, precio, cantidad, idLineaPedido.
 
-const Pedido = require('../../models');
+const Order = require('../../models');
 
-module.exports = async function updatePedido(id, producto, precio, cantidad, idLineaPedido) {
+const modifyOrder = async function (id, producto, precio, cantidad) {
   try {
     // Busca el pedido por id
-    const pedido = await Pedido.findOne({
+    const pedido = await Order.findOne({
       where: {
-        id: id
+        id_order: id
       }
     });
     if (!pedido) {
@@ -17,16 +17,13 @@ module.exports = async function updatePedido(id, producto, precio, cantidad, idL
     }
     // Actualiza los campos
     if (producto) {
-      pedido.producto = producto;
+      pedido.id_product = producto;
     }
     if (precio) {
-      pedido.precio = precio;
+      pedido.price = precio;
     }
     if (cantidad) {
-      pedido.cantidad = cantidad;
-    }
-    if (idLineaPedido) {
-      pedido.idLineaPedido = idLineaPedido;
+      pedido.amount = cantidad;
     }
     await pedido.save();
     return { success: true, pedido: pedido };

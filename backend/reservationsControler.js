@@ -1,4 +1,4 @@
-const Reservation = require('models/reservation');
+const Reservation = require('./models/reservation');
 const Sequelize = require('sequelize');
 
 //Función que recibe los campos de una nueva reserva y la agrega a la base de datos
@@ -20,7 +20,7 @@ const createReservation = async function (idCliente, idBarbero, fecha, servicio)
     console.error('Error al agregar la reserva:', error);
     return { success: false, message: 'Error al agregar la reserva', error: error.message };
   }
-}
+};
 
 //función que recibe el ide de una reserva y la elimina de la base de datos
 //
@@ -42,7 +42,7 @@ const deleteReservation = async function (id) {
     console.error('Error al eliminar la reserva:', error);
     return { success: false, message: 'Error al eliminar la reserva', error: error.message };
   }
-}
+};
 
 //Función que obtiene una reserva por su id
 //
@@ -65,7 +65,7 @@ const getReservation = async function (idReserva) => {
     console.error('Error al obtener la reserva:', error);
     return { success: false, message: 'Error al obtener la reserva', error: error.message };
   }
-}
+};
 
 //Función que extrae todas las reservas de la base de datos y las devuelve en un objeto JSON
 
@@ -88,7 +88,7 @@ const getReservations = async () => {
     console.error('Error al obtener las reservas:', error);
     return { success: false, message: 'Error al obtener las reservas', error: error.message };
   }
-}
+};
 
 //Función que recibe el id de una reserva y unos parámetros correspondientes a los campos del modelo Reserva, para actualizar un registro en la base de datos.
 //
@@ -128,6 +128,6 @@ const modifyReservation = async function (idReserva, idCliente, idBarbero, fecha
     console.error('Error al actualizar la reserva:', error);
     return { success: false, message: 'Error al actualizar la reserva', error: error.message };
   }
-}
+};
 
 moodule.exports = { createReserva, deleteReserva, getReserva, getReservas, modifyReserva };
