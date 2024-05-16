@@ -1,17 +1,18 @@
-const Reserva = require('../models');
+const Reservation = require('./models/reservation');
+const Sequelize = require('sequelize');
 
 //Función que recibe los campos de una nueva reserva y la agrega a la base de datos
 //
 //Recibe: idCliente, idBarbero, fecha y servicio
 
-const createReserva = async function (idCliente, idBarbero, fecha, servicio) {
+const createReservation = async function (idCliente, idBarbero, fecha, servicio) {
   try {
     // Crea la nueva reserva
-    const reserva = await Reserva.create({
-      idCliente: idCliente,
-      idBarbero: idBarbero,
-      fecha: fecha,
-      servicio: servicio,
+    const reserva = await Reservation.create({
+      id_client: idCliente,
+      id_barber: idBarbero,
+      date_reservation: fecha,
+      id_service: servicio,
     });
 
     return { success: true, reserva: reserva };
@@ -19,15 +20,15 @@ const createReserva = async function (idCliente, idBarbero, fecha, servicio) {
     console.error('Error al agregar la reserva:', error);
     return { success: false, message: 'Error al agregar la reserva', error: error.message };
   }
-}
+};
 
 //función que recibe el ide de una reserva y la elimina de la base de datos
 //
 //Recibe: id
 
-const deleteReserva = async function (id) {
+const deleteReservation = async function (id) {
   try{
-    const reserva = await Reserva.findByPk(id);
+    const reserva = await Reservation.findByPk(id);
 
     if(!reserva){
       return { success: false, message: 'No se encontró la reserva' };
@@ -41,23 +42,22 @@ const deleteReserva = async function (id) {
     console.error('Error al eliminar la reserva:', error);
     return { success: false, message: 'Error al eliminar la reserva', error: error.message };
   }
-}
+};
 
 //Función que obtiene una reserva por su id
 //
 //Recibe: idReserva
 
-const getReserva = async function (idReserva) => {
+const getReservation = async function (idReserva) => {
   try {
-    const reserva = await Reserva.findByPk(idReserva);
+    const reserva = await Reservation.findByPk(idReserva);
 
     // mapea los resultados 
     const reservaMapped = {
-      id: reserva.id,
-      fechaInicio: reserva.fechaInicio,
-      fechaFin: reserva.fechaFin,
-      idHabitacion: reserva.idHabitacion,
-      idCliente: reserva.idCliente,
+      id_client: reserva.id_client,
+      date_reservation: reserva.date_reservation,
+      id_barber: reserva.id_barber,
+      id_service: reserva.id_service
     };
 
     return { success: true, reserva: reservaMapped };
@@ -65,22 +65,21 @@ const getReserva = async function (idReserva) => {
     console.error('Error al obtener la reserva:', error);
     return { success: false, message: 'Error al obtener la reserva', error: error.message };
   }
-}
+};
 
 //Función que extrae todas las reservas de la base de datos y las devuelve en un objeto JSON
 
-const getReservas = async () => {
+const getReservations = async () => {
   try {
-    const reservas = await Reserva.findAll();
+    const reservas = await Reservation.findAll();
 
     // mapea los resultados 
     const reservasMapped = reservas.map(reserva => {
       return {
-        id: reserva.id,
-        fechaInicio: reserva.fechaInicio,
-        fechaFin: reserva.fechaFin,
-        idUsuario: reserva.idUsuario,
-        idProducto: reserva.idProducto
+        id_client: reserva.id_client,
+        date_reservation: reserva.date_reservation,
+        id_barber: reserva.id_barber,
+        id_service: reserva.id_service
       };
     });
 
@@ -89,16 +88,16 @@ const getReservas = async () => {
     console.error('Error al obtener las reservas:', error);
     return { success: false, message: 'Error al obtener las reservas', error: error.message };
   }
-}
+};
 
 //Función que recibe el id de una reserva y unos parámetros correspondientes a los campos del modelo Reserva, para actualizar un registro en la base de datos.
 //
 //Recibe: idReserva, idCliente, idBarbero, fecha, servicio
 
-const modifyReserva = async function (idReserva, idCliente, idBarbero, fecha, servicio) {
+const modifyReservation = async function (idReserva, idCliente, idBarbero, fecha, servicio) {
   try {
     // Busca la reserva por id
-    const reserva = await Reserva.findOne({
+    const reserva = await Reservation.findOne({
       where: {
         id: idReserva
       }
@@ -110,16 +109,16 @@ const modifyReserva = async function (idReserva, idCliente, idBarbero, fecha, se
 
     // Actualiza los campos
     if (idCliente) {
-      reserva.idCliente = idCliente;
+      reserva.id_client = idCliente;
     }
     if (idBarbero) {
-      reserva.idBarbero = idBarbero;
+      reserva.id_barber = idBarbero;
     }
     if (fecha) {
-      reserva.fecha = fecha;
+      reserva.date_reservation = fecha;
     }
     if (servicio) {
-      reserva.servicio = servicio;
+      reserva.id_service = servicio;
     }
 
     await reserva.save();
@@ -129,4 +128,6 @@ const modifyReserva = async function (idReserva, idCliente, idBarbero, fecha, se
     console.error('Error al actualizar la reserva:', error);
     return { success: false, message: 'Error al actualizar la reserva', error: error.message };
   }
-}
+};
+
+moodule.exports = { createReserva, deleteReserva, getReserva, getReservas, modifyReserva };

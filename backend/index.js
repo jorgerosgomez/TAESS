@@ -6,6 +6,10 @@ const { getEventos } = require('./scripts/getEventos');
 const { getProducts } = require('./productcontroler');
 const { createProduct } = require('./productcontroler');
 const servicesRoutes = require('./servicesRoutes');
+const ordersRoutes = require('./ordersRoutes');
+const orderlinesRoutes = require('./orderlinesRoutes');
+const reservationsRoutes = require('./reservationsRoutes');
+const barbersRoutes = require('./barbersRoutes');
 
 const app = express();
 app.use(express.json());
@@ -13,6 +17,18 @@ app.use(cors());
 
 //SE MONTAN LAS RUTAS DE SERVICIOS EN /api
 app.use('/api', servicesRoutes);
+
+//SE MONTAN LAS RUTAS DE ORDERS EN /api
+app.use('/api', ordersRoutes);
+
+//SE MONTAN LAS RUTAS DE ORDERLINES EN /api
+app.use('/api', orderlinesRoutes);
+
+//SE MONTAN LAS RUTAS DE RESERVATIONS EN /api
+app.use('/api', reservationsRoutes);
+
+//SE MONTAN LAS RUTAS DE BARBERS EN /api
+app.use('/api', barbersRoutes);
 
 app.post('/api/register', async (req, res) => {
 
