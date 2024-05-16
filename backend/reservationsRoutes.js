@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const reservationsControler = require('./rutasControler');
+const reservationsControler = require('./reservationsControler');
 
 // RUTA LISTAR TODOS
 router.get('/reservations', async (req, res) => {

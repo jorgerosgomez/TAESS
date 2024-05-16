@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const barbersControler = require('./babersControler');
+const barbersControler = require('./barbersControler');
 
 // RUTA LISTAR TODOS
 router.get('/barbers', async (req, res) => {
