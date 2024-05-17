@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING, // Asegúrate de almacenar contraseñas encriptadas
     fullname: DataTypes.STRING,
     email: DataTypes.STRING,
+    administrador: DataTypes.BOOLEAN,
     telephone: DataTypes.INTEGER
   }, {
     sequelize,

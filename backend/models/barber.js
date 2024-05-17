@@ -22,10 +22,8 @@ module.exports = (sequelize, DataTypes) => {
   Barber.init({
     id_barber: DataTypes.INTEGER,
     name: DataTypes.STRING,
-    password: DataTypes.STRING, // Asegúrate de almacenar contraseñas encriptadas
     email: DataTypes.STRING,
     phone: DataTypes.INTEGER,
-    admin: DataTypes.BOOLEAN,
     available: DataTypes.BOOLEAN
   }, {
     sequelize,

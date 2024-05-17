@@ -14,17 +14,27 @@ const loginUser = async (username, password) => {
 
     const user = rows[0];
 
-    // Compara la contraseña proporcionada con la contraseña almacenada en la base de datos
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
       return { success: false, message: 'Contraseña incorrecta' };
     }
 
-    // Genera un token de autenticación
+
     const token = jwt.sign({ userId: user.id }, 'tu_clave_secreta', { expiresIn: '1h' });
 
-    return { success: true, token };
+    return { 
+      success: true, 
+      token, 
+      user: {
+        id: user.id,
+        username: user.username,
+        fullname: user.fullname,
+        email: user.email,
+        telephone: user.telephone,
+        administrador: user.administrador 
+      } 
+    };
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
     return { success: false, message: 'Error al iniciar sesión' };

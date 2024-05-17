@@ -1,10 +1,14 @@
 const express = require('express');
 const cors = require('cors'); // Importa CORS
-const { createUser } = require('./usercontroler');
+const { createUser, getUsers, deleteUser, modifyUser } = require('./usercontroler');
 const { loginUser } = require('./loginUser');
 const { getEventos } = require('./scripts/getEventos');
 const productsRoutes = require('./productsRoutes');
 const servicesRoutes = require('./servicesRoutes');
+const ordersRoutes = require('./ordersRoutes');
+const orderlinesRoutes = require('./orderlinesRoutes');
+const reservationsRoutes = require('./reservationsRoutes');
+const barbersRoutes = require('./barbersRoutes');
 
 const app = express();
 app.use(express.json());
@@ -15,6 +19,17 @@ app.use('/api', servicesRoutes);
 
 //SE MONTAN LAS RUTAS DE Productos EN /api
 app.use('/api', productsRoutes);
+//SE MONTAN LAS RUTAS DE ORDERS EN /api
+app.use('/api', ordersRoutes);
+
+//SE MONTAN LAS RUTAS DE ORDERLINES EN /api
+app.use('/api', orderlinesRoutes);
+
+//SE MONTAN LAS RUTAS DE RESERVATIONS EN /api
+app.use('/api', reservationsRoutes);
+
+//SE MONTAN LAS RUTAS DE BARBERS EN /api
+app.use('/api', barbersRoutes);
 
 app.post('/api/register', async (req, res) => {
 
@@ -28,10 +43,10 @@ app.post('/api/register', async (req, res) => {
   }
 
   // Desestructurar 'username', 'email' y 'password' del cuerpo de la solicitud
-  const { username, email, password } = req.body;
+  const { fullName, username, email, password, telephone } = req.body;
   
   // Llamada a 'createUser'
-  const result = await createUser(username, email, password);
+  const result = await createUser(fullName, username, email, password, telephone);
 
   if (result.success) {
     res.json({ success: true, message: 'Usuario registrado con éxito', userId: result.userId });
@@ -42,21 +57,65 @@ app.post('/api/register', async (req, res) => {
 });
 
 app.post('/api/login', async (req, res) => {
- 
-  console.log('Se recibió una solicitud de inicio de sesión')
+  console.log('Se recibió una solicitud de inicio de sesión');
+
   if (!req.is('application/json')) {
     return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
   }
 
   const { username, password } = req.body;
 
-  // Llama a la función controladora para iniciar sesión
+ 
   const result = await loginUser(username, password);
 
   if (result.success) {
-    res.json({ success: true, message: 'Inicio de sesión exitoso', token: result.token });
+    res.json({ 
+      success: true, 
+      message: 'Inicio de sesión exitoso', 
+      token: result.token, 
+      user: result.user 
+    });
   } else {
     res.status(401).json({ success: false, message: 'Credenciales incorrectas' });
+  }
+});
+app.get('/api/users', async (req, res) => {
+  const result = await getUsers();
+  if (result.success) {
+    res.json(result.users);
+  } else {
+    res.status(500).json({ message: result.message });
+  }
+});
+
+app.post('/api/users', async (req, res) => {
+  const { fullName, username, email, password, telephone } = req.body;
+  const result = await createUser(fullName, username, email, password, telephone);
+  if (result.success) {
+    res.status(201).json(result);
+  } else {
+    res.status(500).json({ message: result.message });
+  }
+});
+
+app.put('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const { fullName, username, email, telephone } = req.body;
+  const result = await modifyUser(id, fullName, username, email, telephone);
+  if (result.success) {
+    res.json(result);
+  } else {
+    res.status(500).json({ message: result.message });
+  }
+});
+
+app.delete('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const result = await deleteUser(id);
+  if (result.success) {
+    res.json({ success: true, message: result.message });
+  } else {
+    res.status(500).json({ success: false, message: result.message });
   }
 });
 
