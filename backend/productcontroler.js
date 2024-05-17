@@ -13,8 +13,6 @@ const createProduct = async (name, description, stock, price, sales, stock_min) 
   }
 };
 
-module.exports = { createProduct };
-
 const modifyProduct = async (name, description, stock, price, sales, stock_min) => {
   try {
     const query = 'UPDATE products SET name = ?, description = ?, stock = ?, price = ?, sales = ?, stock_min = ? WHERE id = ?';
@@ -26,9 +24,6 @@ const modifyProduct = async (name, description, stock, price, sales, stock_min) 
     return { success: false, message: 'Error al modificar el producto' };
   }
 };
-
-module.exports = { modifyProduct };
-
 
 const deleteProduct = async (productId) => {
   try {
@@ -46,8 +41,6 @@ const deleteProduct = async (productId) => {
   }
 };
 
-module.exports = { deleteProduct };
-
 const getProducts = async () => {
   try {
     const query = 'SELECT * FROM Products'; 
@@ -64,4 +57,4 @@ const getProducts = async () => {
   }
 };
 
-module.exports = { getProducts };
+module.exports = { getProducts, createProduct, modifyProduct, deleteProduct};
