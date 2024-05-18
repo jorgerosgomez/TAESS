@@ -3,9 +3,8 @@ const cors = require('cors'); // Importa CORS
 const { createUser, getUsers, deleteUser, modifyUser } = require('./usercontroler');
 const { loginUser } = require('./loginUser');
 const { getEventos } = require('./scripts/getEventos');
-const { getProducts } = require('./productcontroler');
-const { createProduct } = require('./productcontroler');
 const servicesRoutes = require('./servicesRoutes');
+const productsRoutes = require('./productsRoutes')
 const ordersRoutes = require('./ordersRoutes');
 const orderlinesRoutes = require('./orderlinesRoutes');
 const reservationsRoutes = require('./reservationsRoutes');
@@ -17,6 +16,9 @@ app.use(cors());
 
 //SE MONTAN LAS RUTAS DE SERVICIOS EN /api
 app.use('/api', servicesRoutes);
+
+//SE MONTAN LAS RUTAS DE PRODUCTS EN /api
+app.use('/api', productsRoutes);
 
 //SE MONTAN LAS RUTAS DE ORDERS EN /api
 app.use('/api', ordersRoutes);
@@ -130,40 +132,6 @@ app.get('/api/eventos', async (req, res) => {
   } catch (error) {
     console.error('Error al obtener los eventos:', error);
     res.status(500).json({ success: false, message: 'Error al obtener los eventos', error: error.toString() });
-  }
-});
-
-app.get('/api/products', async (req, res) => {
-  try {
-    const products = await getProducts(); 
-    res.json({ success: true, message: 'Productos obtenidos con éxito', data: products });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Error al obtener los productos', error: error.message });
-  }
-});
-
-app.post('/api/addProduct', async (req, res) => {
-
-  if (!req.is('application/json')) {
-    return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
-  }
-
-  
-  if (Object.keys(req.body).length === 0) {
-    return res.status(400).json({ success: false, message: 'El cuerpo de la solicitud está vacío' });
-  }
-
-  // Desestructurar 'username', 'email' y 'password' del cuerpo de la solicitud
-  const { name, description, stock, price, sales, stock_min } = req.body;
-  
-  // Llamada a 'createUser'
-  const result = await createProduct(name, description, stock, price, sales, stock_min);
-
-  if (result.success) {
-    res.json({ success: true, message: 'Producto añadido con éxito', userId: result.userId });
-  } else {
-    // Considera manejar diferentes códigos de estado HTTP dependiendo del error
-    res.status(500).json({ success: false, message: result.message });
   }
 });
 
