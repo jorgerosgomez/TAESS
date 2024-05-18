@@ -1,26 +1,20 @@
 const Barber = require('./models/barber');
-const bcrypt = require('bcrypt');
+const db = require('./database');
 
 // LISTAR TODOS
 const getBarbers = async () => {
   try {
-    const barberos = await Barber.findAll();
+    const query = 'SELECT * FROM Barbers';
+    const [results] = await db.execute(query);
 
-    // Mapea los resultados 
-    const barberosMapped = barberos.map(barbero => {
-      return {
-        id: barbero.id_barber,
-        name: barbero.name,
-        phone: barbero.phone,
-        email: barbero.email,
-        available: barbero.available,
-      };
-    });
-
-    return { success: true, barberos: barberosMapped };
+    if (results.length > 0) {
+      return { success: true, services: results };
+    } else {
+      return { success: false, message: 'No se encontraron barberos en la base de datos' };
+    }
   } catch (error) {
     console.error('Error al obtener los barberos:', error);
-    return { success: false, message: 'Error al obtener los barberos', error: error.message };
+    return { success: false, message: 'Error al obtener los barberos' };
   }
 };
 
@@ -50,75 +44,39 @@ const getBarber = async (idBarbero) => {
 };
 
 // CREAR
-const createBarber = async (name, password, email, phone, admin, available) => {
+const createBarber = async (name, email, phone, available) => {
   try {
-    // Crea el nuevo barbero
-    const barbero = await Barber.create({
-      name: name,
-      email: email,
-      phone: phone,
-      available: available,
-    });
+    const query = 'INSERT INTO Barbers ( name, email, phone, available ) VALUES (?, ?, ?, ?)';
+    const [result] = await db.execute(query, [name, email, phone, available]);
 
-    return { success: true, barbero: barbero };
+    return { success: true, message: 'Barbero registrado con exito', barberId: result.insertId };
   } catch (error) {
-    console.error('Error al agregar el barbero:', error);
-    return { success: false, message: 'Error al agregar el barbero', error: error.message };
+    console.error('Error al registrar el barbero:', error);
+    return { success: false, message: 'Error al registrar el barbero' };
   }
 };
 
 // MODIFICAR
-const modifyBarber = async (id, name, password, email, phone, admin, available) => {
+const modifyBarber = async (name, email, phone, available, barberId) => {
   try {
-    // Busca el barbero por id
-    const barbero = await Barber.findOne({
-      where: {
-        id_barber: id
-      }
-    });
+    const query = 'UPDATE Barbers SET name = ?, email = ?, phone = ?, available = ? WHERE id = ?';
+    const [result] = await db.execute(query, [name, email, phone, available, barberId]);
 
-    if (!barbero) {
-      return { success: false, message: 'Barbero no encontrado' };
-    }
-
-    // Actualiza los campos
-    if (name) {
-      barbero.name = name;
-    }
-    if (email) {
-      barbero.email = email;
-    }
-    if (phone) {
-      barbero.phone = phone;
-    }
-    if (available !== undefined) {
-      barbero.available = available;
-    }
-
-    await barbero.save();
-
-    return { success: true, barbero: barbero };
+    return { success: true, message: 'Barbero modificado con exito', barberId: result.insertId };
   } catch (error) {
-    console.error('Error al actualizar el barbero:', error);
-    return { success: false, message: 'Error al actualizar el barbero', error: error.message };
+    console.error('Error al modificar el barbero:', error);
+    return { success: false, message: 'Error al modificar el barbero' };
   }
 };
 
 // BORRAR
 const deleteBarber = async (id) => {
   try {
-    const barbero = await Barber.findByPk(id);
-
-    if (!barbero) {
-      return { success: false, message: 'No se encontró el barbero' };
-    }
-
-    await barbero.destroy();
-
+    await db.execute('DELETE FROM Barbers WHERE id = ?', [id]);
     return { success: true };
   } catch (error) {
-    console.error('Error al eliminar el barbero:', error);
-    return { success: false, message: 'Error al eliminar el barbero', error: error.message };
+    console.error('Error deleting barber:', error);
+    return { success: false, message: 'Error deleting barber' };
   }
 };
 
