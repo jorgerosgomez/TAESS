@@ -13,7 +13,7 @@ const fetchBarbers = async () => {
         throw new Error(data.message || 'Error al obtener los barberos');
       }
   
-      return data;
+      return data.barbers;
     } catch (error) {
       console.error('Error al obtener los barberos:', error);
       throw new Error('Hubo un problema al obtener los barberos');
