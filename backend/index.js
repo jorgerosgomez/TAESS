@@ -3,6 +3,7 @@ const cors = require('cors'); // Importa CORS
 const { createUser, getUsers, deleteUser, modifyUser } = require('./usercontroler');
 const { loginUser } = require('./loginUser');
 const { getEventos } = require('./scripts/getEventos');
+const { getLibres } = require('./scripts/getLibres');
 const servicesRoutes = require('./servicesRoutes');
 const productsRoutes = require('./productsRoutes')
 const ordersRoutes = require('./ordersRoutes');
@@ -132,6 +133,23 @@ app.get('/api/eventos', async (req, res) => {
   } catch (error) {
     console.error('Error al obtener los eventos:', error);
     res.status(500).json({ success: false, message: 'Error al obtener los eventos', error: error.toString() });
+  }
+});
+
+app.get('/api/libres', async (req, res) => {
+  const { day, id } = req.query;
+  if (!day) {
+    return res.status(400).json({ success: false, message: 'La fecha es requerida' });
+  }
+  if (!id) {
+    return res.status(400).json({ success: false, message: 'El id del servicio es requerido' });
+  }
+  try {
+    const libres = await getLibres(day, id);
+    res.json({ success: true, data: libres });
+  } catch (error) {
+    console.error('Error al obtener los huecos libres:', error);
+    res.status(500).json({ success: false, message: 'Error al obtener los huecos libres', error: error.toString() });
   }
 });
 
