@@ -45,16 +45,16 @@ const createOrder = async (producto, precio, cantidad) => {
     // Obtener los productos disponibles
     const respuesta = await getProducts();
     if(!respuesta.success){
-      return { success: false, message: 'Error al obtener productos: ' + productsResponse.message };
+      return { success: false, message: 'Error al obtener productos: ' + respuesta.message };
     }
     const productIds = respuesta.products.map(product => product.id);
 
     // Verificar si el ID del producto existe
-    if (!productIds.includes(producto)) {
+    if (!productIds.includes(Number(producto))) {
       return { success: false, message: 'ID de producto no válido' };
     }
 
-    const query = 'INSERT INTO Orders ( producto, precio, cantidad ) VALUES (?, ?, ?)';
+    const query = 'INSERT INTO Orders ( id_product, price, amount ) VALUES (?, ?, ?)';
     const [result] = await db.execute(query, [producto, precio, cantidad]);
 
     return { success: true, message: 'Pedido registrado con exito', orderId: result.orderId };
@@ -70,16 +70,16 @@ const modifyOrder = async (id, producto, precio, cantidad) => {
     // Obtener los productos disponibles
     const respuesta = await getProducts();
     if(!respuesta.success){
-      return { success: false, message: 'Error al obtener productos: ' + productsResponse.message };
+      return { success: false, message: 'Error al obtener productos: ' + respuesta.message };
     }
     const productIds = respuesta.products.map(product => product.id);
 
     // Verificar si el ID del producto existe
-    if (!productIds.includes(producto)) {
-      return { success: false, message: 'ID de producto no válido' };
+    if (!productIds.includes(Number(producto))) {
+      return { success: false, message: 'ID de producto no valido' };
     }
 
-    const query = 'UPDATE Orders SET producto = ?, precio = ?, cantidad = ? WHERE id = ?';
+    const query = 'UPDATE Orders SET id_product = ?, price = ?, amount = ? WHERE id = ?';
     const [result] = await db.execute(query, [producto, precio, cantidad, id]);
 
     return { success: true, message: 'Pedido modificado con exito', orderId: result.orderId };
@@ -93,7 +93,7 @@ const modifyOrder = async (id, producto, precio, cantidad) => {
 //BORRAR
 const deleteOrder = async (idPedido) => {
   try {
-    await db.execute('DELETE FROM Orders WHERE idPedido = ?', [idPedido]);
+    await db.execute('DELETE FROM Orders WHERE id = ?', [idPedido]);
     return { success: true };
   } catch (error) {
     console.error('Error deleting order:', error);
