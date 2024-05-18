@@ -6,7 +6,7 @@ const barbersControler = require('./barbersControler');
 router.get('/barbers', async (req, res) => {
     const result = await barbersControler.getBarbers();
     if (result.success) {
-        res.status(200).json( {success: true, services: result.services});
+        res.status(200).json( {success: true, barbers: result.barbers});
     } else {
         res.status(404).json({ message: result.message });
     }
@@ -35,7 +35,7 @@ router.patch('/barbers/:id', async (req, res) => {
 
     const { id } = req.params;
     const { name, email, phone, available } = req.body;
-    const result = await barbersControler.modifyBarber(id, name, email, phone, available);
+    const result = await barbersControler.modifyBarber(name, email, phone, available, id);
     if (result.success) {
         res.status(200).json(result);
     } else {

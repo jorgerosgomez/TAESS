@@ -8,7 +8,7 @@ const getBarbers = async () => {
     const [results] = await db.execute(query);
 
     if (results.length > 0) {
-      return { success: true, services: results };
+      return { success: true, barbers: results };
     } else {
       return { success: false, message: 'No se encontraron barberos en la base de datos' };
     }
