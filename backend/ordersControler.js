@@ -1,25 +1,21 @@
 const Order = require('./models/order');
-const Sequelize = require('sequelize');
+const db = require('./database');
+const { getProducts } = require('./productcontroler')
 
 //LISTAR TODOS
 const getOrders = async () => {
   try {
-    const pedidos = await Order.findAll();
+    const query = 'SELECT * FROM Orders';
+    const [results] = await db.execute(query);
 
-    // mapea los resultados 
-    const pedidosMapped = pedidos.map(pedido => {
-      return {
-        id_order: pedido.id_order,
-        id_producto: pedido.id_producto,
-        price: pedido.price,
-        amount: pedido.amount,
-      };
-    });
-
-    return { success: true, pedidos: pedidosMapped };
+    if (results.length > 0) {
+      return { success: true, orders: results };
+    } else {
+      return { success: false, message: 'No se encontraron pedidos en la base de datos' };
+    }
   } catch (error) {
     console.error('Error al obtener los pedidos:', error);
-    return { success: false, message: 'Error al obtener los pedidos', error: error.message };
+    return { success: false, message: 'Error al obtener los pedidos' };
   }
 };
 
@@ -44,62 +40,65 @@ const getOrder = async (idPedido) => {
 };
 
 //CREAR
-const createOrder = async function (producto, precio, cantidad) {
+const createOrder = async (producto, precio, cantidad) => {
   try {
-    // Crea el nuevo pedido
-    const pedido = await Pedido.create({
-      id_product: producto,
-      price: precio,
-      amount: cantidad,
-    });
+    // Obtener los productos disponibles
+    const respuesta = await getProducts();
+    if(!respuesta.success){
+      return { success: false, message: 'Error al obtener productos: ' + respuesta.message };
+    }
+    const productIds = respuesta.products.map(product => product.id);
 
-    return { success: true, pedido: pedido };
+    // Verificar si el ID del producto existe
+    if (!productIds.includes(Number(producto))) {
+      return { success: false, message: 'ID de producto no válido' };
+    }
+
+    const query = 'INSERT INTO Orders ( id_product, price, amount ) VALUES (?, ?, ?)';
+    const [result] = await db.execute(query, [producto, precio, cantidad]);
+
+    return { success: true, message: 'Pedido registrado con exito', orderId: result.orderId };
   } catch (error) {
-    console.error('Error al agregar el pedido:', error);
-    return { success: false, message: 'Error al agregar el pedido', error: error.message };
+    console.error('Error al registrar el pedido:', error);
+    return { success: false, message: 'Error al registrar el pedido' };
   }
 };
 
 //MODIFICAR
-const modifyOrder = async function (id, producto, precio, cantidad) {
+const modifyOrder = async (id, producto, precio, cantidad) => {
   try {
-    // Busca el pedido por id
-    const pedido = await Order.findOne({
-      where: {
-        id_order: id
-      }
-    });
-    if (!pedido) {
-      return { success: false, message: 'Pedido no encontrado' };
+    // Obtener los productos disponibles
+    const respuesta = await getProducts();
+    if(!respuesta.success){
+      return { success: false, message: 'Error al obtener productos: ' + respuesta.message };
     }
-    // Actualiza los campos
-    if (producto) {
-      pedido.id_product = producto;
+    const productIds = respuesta.products.map(product => product.id);
+
+    // Verificar si el ID del producto existe
+    if (!productIds.includes(Number(producto))) {
+      return { success: false, message: 'ID de producto no valido' };
     }
-    if (precio) {
-      pedido.price = precio;
-    }
-    if (cantidad) {
-      pedido.amount = cantidad;
-    }
-    await pedido.save();
-    return { success: true, pedido: pedido };
-  }
-  catch (error) {
-    console.error('Error al actualizar el pedido:', error);
-    return { success: false, message: 'Error al actualizar el pedido', error: error.message };
+
+    const query = 'UPDATE Orders SET id_product = ?, price = ?, amount = ? WHERE id = ?';
+    const [result] = await db.execute(query, [producto, precio, cantidad, id]);
+
+    return { success: true, message: 'Pedido modificado con exito', orderId: result.orderId };
+  } catch (error) {
+    console.error('Error al modificar el pedido:', error);
+    return { success: false, message: 'Error al modificar el pedido' };
   }
 };
 
 
 //BORRAR
 const deleteOrder = async (idPedido) => {
-    const pedido = await Order.findByPk(idPedido);
-    if (!pedido) {
-        throw new Error('No existe el pedido');
-    }
-    await pedido.destroy();
-    return pedido;
+  try {
+    await db.execute('DELETE FROM Orders WHERE id = ?', [idPedido]);
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    return { success: false, message: 'Error deleting order' };
+  }
 };
 
 module.exports = { getOrders, getOrder, createOrder, modifyOrder, deleteOrder};
