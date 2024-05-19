@@ -1,76 +1,94 @@
-
 .product-page {
-    padding: 20px;
-  }
-  
-  .product-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    gap: 20px;
-  }
-  
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+.product-card {
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.product-card h3 {
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid currentColor;
+}
+
+.product-info {
+  margin-top: 12px;
+}
+
+.product-info span {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.loading, .error {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 50px;
+}
+
+/* Light Theme */
+.light {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.light .product-card {
+  background-color: #fff;
+  color: #333;
+}
+
+.light .product-card h3 {
+  border-color: #333;
+}
+
+.loading.light, .error.light {
+  color: #666;
+}
+
+/* Dark Theme */
+.dark {
+  background-color: #1e1e1e;
+  color: #ddd;
+}
+
+.dark .product-card {
+  background-color: #2a2a2a;
+  color: #ddd;
+}
+
+.dark .product-card h3 {
+  border-color: #ddd;
+}
+
+.loading.dark, .error.dark {
+  color: #bbb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .product-card {
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: box-shadow 0.3s ease;
-    width: 300px; 
+    max-width: 100%;
   }
-  
-  .product-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
-  
-  .product-card h3 {
-    margin: 0;
-    padding-bottom: 8px;
-    border-bottom: 1px solid currentColor;
-  }
-  
-  .product-info {
-    margin-top: 12px;
-  }
-  
-  .product-info span {
-    display: block;
-    margin-bottom: 4px;
-  }
-  
-  .loading, .error {
-    text-align: center;
-    font-size: 1.5rem;
-  }
-  
-
-  .light {
-    background-color: #f0f0f0;
-    color: #333;
-  }
-  
-  .light .product-card {
-    background-color: #fff;
-    color: #333;
-  }
-
-  .dark {
-    background-color: #1e1e1e;
-    color: #ddd;
-  }
-  
-  .dark .product-card {
-    background-color: #2a2a2a;
-    color: #ddd;
-  }
-  
-
-  .loading.light, .error.light {
-    color: #666;
-  }
-  
-  .loading.dark, .error.dark {
-    color: #bbb;
-  }
-  
- 
-  
+}

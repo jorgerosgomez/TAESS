@@ -1,70 +1,98 @@
 .service-page {
     padding: 20px;
-}
-
-.service-list {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .service-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     gap: 20px;
-}
-
-.service-card {
+  }
+  
+  .service-card {
     border-radius: 8px;
     padding: 16px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.3s ease;
-    width: 300px; 
-}
-
-.service-card:hover {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .service-card:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.service-card h3 {
+  }
+  
+  .service-header {
+    cursor: pointer;
+  }
+  
+  .service-details {
+    display: none;
+    padding-top: 10px;
+  }
+  
+  .service-card:hover .service-details {
+    display: block;
+  }
+  
+  .service-card h3 {
     margin: 0;
     padding-bottom: 8px;
     border-bottom: 1px solid currentColor;
-}
-
-.service-info {
+  }
+  
+  .service-info {
     margin-top: 12px;
-}
-
-.service-info span {
+  }
+  
+  .service-info span {
     display: block;
     margin-bottom: 4px;
-}
-
-.loading, .error {
+  }
+  
+  .loading,
+  .error {
     text-align: center;
     font-size: 1.5rem;
-}
-
-.light {
+    margin-top: 50px;
+  }
+  
+  .light {
     background-color: #f0f0f0;
     color: #333;
-}
-
-.light .service-card {
+  }
+  
+  .light .service-card {
     background-color: #fff;
     color: #333;
-}
-
-.dark {
+  }
+  
+  .dark {
     background-color: #1e1e1e;
     color: #ddd;
-}
-
-.dark .service-card {
+  }
+  
+  .dark .service-card {
     background-color: #2a2a2a;
     color: #ddd;
-}
-
-.loading.light, .error.light {
+  }
+  
+  .loading.light,
+  .error.light {
     color: #666;
-}
-
-.loading.dark, .error.dark {
+  }
+  
+  .loading.dark,
+  .error.dark {
     color: #bbb;
-}
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .service-card {
+      max-width: 100%;
+    }
+  }
+  

@@ -5,6 +5,7 @@ const ProductPage = ({ theme }) => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [expandedProduct, setExpandedProduct] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -30,8 +31,14 @@ const ProductPage = ({ theme }) => {
     fetchProducts();
   }, []);
 
+  const toggleProduct = (productId) => {
+    setExpandedProduct((prevExpandedProduct) =>
+      prevExpandedProduct === productId ? null : productId
+    );
+  };
+
   const productPageClass = `product-page ${theme}`;
-  const productCardClass = `product-card ${theme}-card`; 
+  const productCardClass = `product-card ${theme}-card`;
 
   if (isLoading) {
     return <div className={`loading ${theme}`}>Cargando productos...</div>;
@@ -48,12 +55,18 @@ const ProductPage = ({ theme }) => {
         {products.length > 0 ? (
           products.map((product) => (
             <div className={productCardClass} key={product.id}>
-              <h3>{product.name}</h3>
-              <p>{product.description}</p>
-              <div className="product-info">
-                <span>Stock: {product.stock}</span>
-                <span>Price: ${product.price.toFixed(2)}</span>
+              <div className="product-header" onClick={() => toggleProduct(product.id)}>
+                <h3>{product.name}</h3>
               </div>
+              {expandedProduct === product.id && (
+                <div className="product-details">
+                  <p>{product.description}</p>
+                  <div className="product-info">
+                    <span>Stock: {product.stock}</span>
+                    <span>Price: ${product.price.toFixed(2)}</span>
+                  </div>
+                </div>
+              )}
             </div>
           ))
         ) : (
