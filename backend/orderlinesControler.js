@@ -4,18 +4,15 @@ const Sequelize = require('sequelize');
 //LISTAR TODOS
 const getOrderLines = async () => {
   try {
-    const lineaPedidos = await OrderLine.findAll();
+    const query = 'SELECT * FROM OrderLines';
+    const [results] = await db.execute(query);
 
-    // mapea los resultados 
-    const lineaPedidosMapped = lineaPedidos.map(lineaPedido => {
-      return {
-        id_client: lineaPedido.id_client,
-        id_barber: lineaPedido.id_barber,
-        date_order: lineaPedido.date_order,
-      };
-    });
-
-    return { success: true, lineaPedidos: lineaPedidosMapped };
+    if (results.length > 0) {
+      return { success: true, lineasPedido: results };
+    }
+    else {
+      return { success: false, message: 'No se encontraron líneas de pedido en la base de datos' };
+    }
   } catch (error) {
     console.error('Error al obtener las líneas de pedido:', error);
     return { success: false, message: 'Error al obtener las líneas de pedido', error: error.message };
@@ -25,17 +22,15 @@ const getOrderLines = async () => {
 //LISTAR UNO POR ID
 const getOrderLine = async (idLineaPedido) => {
   try {
-    const lineaPedido = await OrderLine.findByPk(idLineaPedido);
+    const query = 'SELECT * FROM OrderLines WHERE id = ?';
+    const [result] = await db.execute(query, [idLineaPedido]);
 
-    // mapea los resultados 
-    const lineaPedidoMapped = {
-      id: lineaPedido.id,
-      id_client: lineaPedido.id_client,
-      id_barber: lineaPedido.id_barber,
-      date_order: lineaPedido.date_order,
-    };
-
-    return { success: true, lineaPedido: lineaPedidoMapped };
+    if (result.length > 0) {
+      return { success: true, lineaPedido: result[0] };
+    }
+    else {
+      return { success: false, message: 'No se encontró la línea de pedido en la base de datos' };
+    }
   } catch (error) {
     console.error('Error al obtener la linea de pedido:', error);
     return { success: false, message: 'Error al obtener la linea de pedido', error: error.message };
@@ -45,14 +40,10 @@ const getOrderLine = async (idLineaPedido) => {
 //CREAR
 const createOrderLine = async function (idCliente, idBarbero, fecha_pedido) {
   try {
-    // Crea la nueva línea de pedido
-    const lineaPedido = await OrderLine.create({
-      id_client: idCliente,
-      id_barber: idBarbero,
-      date_order: fecha_pedido,
-    });
+    const query = 'INSERT INTO OrderLines (id_client, id_barber, date_order) VALUES (?, ?, ?)';
+    const [result] = await db.execute(query, [idCliente, idBarbero, fecha_pedido]);
 
-    return { success: true, lineaPedido: lineaPedido };
+    return { success: true, message: 'Línea de pedido creada con éxito', serviceId: result.insertId };
   } catch (error) {
     console.error('Error al agregar la línea de pedido:', error);
     return { success: false, message: 'Error al agregar la línea de pedido', error: error.message };
@@ -62,27 +53,10 @@ const createOrderLine = async function (idCliente, idBarbero, fecha_pedido) {
 //MODIFICAR
 const modifyOrderLine = async function (id, idCliente, idBarbero, fecha_pedido) {
   try {
-    // Busca la linea de pedido por id
-    const lineaPedido = await OrderLine.findOne({
-      where: {
-        id: id
-      }
-    });
-    if (!lineaPedido) {
-      return { success: false, message: 'Linea de pedido no encontrada' };
-    }
-    // Actualiza los campos
-    if (idCliente) {
-      lineaPedido.id_client = idCliente;
-    }
-    if (idBarbero) {
-      lineaPedido.id_barber = idBarbero;
-    }
-    if (fecha_pedido) {
-      lineaPedido.date_order = fecha_pedido;
-    }
-    await lineaPedido.save();
-    return { success: true, lineaPedido: lineaPedido };
+    const query = 'UPDATE OrderLines SET id_client = ?, id_barber = ?, date_order = ? WHERE id = ?';
+    const [result] = await db.execute(query, [idCliente, idBarbero, fecha_pedido, id]);
+
+    return { success: true, message: 'Línea de pedido modificada con éxito', serviceId: result.insertId};
   }
   catch (error) {
     console.error('Error al actualizar la linea de pedido:', error);
@@ -94,15 +68,10 @@ const modifyOrderLine = async function (id, idCliente, idBarbero, fecha_pedido) 
 //BORRAR
 const deleteOrderLine = async function (id) {
   try{
-    const lineaPedido = await OrderLine.findByPk(id);
+    const query = 'DELETE FROM OrderLines WHERE id = ?';
+    const [result] = await db.execute(query, [id]);
 
-    if(!lineaPedido){
-      return { success: false, message: 'No se encontró la línea de pedido' };
-    }
-
-    await lineaPedido.destroy();
-
-    return { success: true };
+    return { success: true, message: 'Línea de pedido eliminada con éxito'};
   }
   catch(error){
     console.error('Error al eliminar la línea de pedido:', error);
