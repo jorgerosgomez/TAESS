@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchBarbers, createOrUpdateBarber, deleteBarber } from './fetchBarbers';
+import { fetchOrders, createOrUpdateOrder, deleteOrder } from './fetchOrders';
 import { useTable } from 'react-table';
 import {
   Button,
@@ -18,17 +18,19 @@ import {
   Divider,
   Paper,
   IconButton,
-  Checkbox,
-  FormControlLabel,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import { CSVLink } from 'react-csv';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
-const BarbersTable = ({ theme }) => {
+const OrdersTable = ({ theme }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [formState, setFormState] = useState({ id: '', name: '', email: '', phone: '', available: false });
+  const [formState, setFormState] = useState({ id: '', id_product: '', price: '', amount: '' });
+  const [error, setError] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -37,9 +39,9 @@ const BarbersTable = ({ theme }) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const barbers = await fetchBarbers();
-      console.log('Barbers:', barbers);
-      setData(Array.isArray(barbers) ? barbers : []);
+      const orders = await fetchOrders();
+      console.log('Orders:', orders);
+      setData(Array.isArray(orders) ? orders : []);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -48,36 +50,42 @@ const BarbersTable = ({ theme }) => {
 
   const handleCreateOrUpdate = async () => {
     try {
-      await createOrUpdateBarber(formState);
-      fetchData();
-      setOpen(false);
-      setFormState({ id: '', name: '', email: '', phone: '', available: false });
+      const result = await createOrUpdateOrder(formState);
+      if (!result.success) {
+        setError(result.message);
+        setOpenSnackbar(true);
+      } else {
+        fetchData();
+        setOpen(false);
+        setFormState({ id: '', id_product: '', price: '', amount: '' });
+      }
     } catch (error) {
-      console.error('Error saving barber:', error);
+      console.error('Error saving order:', error);
+      setError(error.message);
+      setOpenSnackbar(true);
     }
   };
 
-  const handleEdit = (barber) => {
-    setFormState(barber);
+  const handleEdit = (order) => {
+    setFormState(order);
     setOpen(true);
   };
 
   const handleDelete = async (id) => {
     try {
-      await deleteBarber(id);
+      await deleteOrder(id);
       fetchData();
     } catch (error) {
-      console.error('Error deleting barber:', error);
+      console.error('Error deleting order:', error);
     }
   };
 
   const columns = React.useMemo(
     () => [
       { Header: 'ID', accessor: 'id' },
-      { Header: 'Name', accessor: 'name' },
-      { Header: 'Email', accessor: 'email' },
-      { Header: 'Phone', accessor: 'phone' },
-      { Header: 'Available', accessor: 'available', Cell: ({ value }) => (value ? 'Yes' : 'No') },
+      { Header: 'Product', accessor: 'id_product' },
+      { Header: 'Price', accessor: 'price' },
+      { Header: 'Amount', accessor: 'amount' },
       {
         Header: 'Actions',
         Cell: ({ row }) => (
@@ -107,7 +115,7 @@ const BarbersTable = ({ theme }) => {
       }}
     >
       <Typography variant="h4" gutterBottom>
-        Barbers
+        Orders
       </Typography>
       <Divider />
       <div style={{ display: 'flex', justifyContent: 'space-between', margin: '16px 0' }}>
@@ -117,9 +125,9 @@ const BarbersTable = ({ theme }) => {
           startIcon={<AddIcon />}
           onClick={() => setOpen(true)}
         >
-          Add Barber
+          Add Order
         </Button>
-        <CSVLink data={data} filename={"barbers.csv"} style={{ textDecoration: 'none' }}>
+        <CSVLink data={data} filename={"orders.csv"} style={{ textDecoration: 'none' }}>
           <Button variant="contained" color="secondary">Export to CSV</Button>
         </CSVLink>
       </div>
@@ -154,44 +162,34 @@ const BarbersTable = ({ theme }) => {
       </Paper>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle style={{ color: theme === 'light' ? '#000' : '#fff' }}>
-          {formState.id ? 'Edit Barber' : 'Add Barber'}
+          {formState.id ? 'Edit Order' : 'Add Order'}
         </DialogTitle>
         <DialogContent>
           <TextField
             margin="dense"
-            label="Name"
-            type="text"
-            fullWidth
-            value={formState.name}
-            onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-            style={{ marginBottom: '16px' }}
-          />
-          <TextField
-            margin="dense"
-            label="Email"
-            type="email"
-            fullWidth
-            value={formState.email}
-            onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-            style={{ marginBottom: '16px' }}
-          />
-          <TextField
-            margin="dense"
-            label="Phone"
+            label="Product"
             type="number"
             fullWidth
-            value={formState.phone}
-            onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
+            value={formState.id_product}
+            onChange={(e) => setFormState({ ...formState, id_product: e.target.value })}
             style={{ marginBottom: '16px' }}
           />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={formState.available}
-                onChange={(e) => setFormState({ ...formState, available: e.target.checked })}
-              />
-            }
-            label="Available"
+          <TextField
+            margin="dense"
+            label="Price"
+            type="number"
+            fullWidth
+            value={formState.price}
+            onChange={(e) => setFormState({ ...formState, price: e.target.value })}
+            style={{ marginBottom: '16px' }}
+          />
+          <TextField
+            margin="dense"
+            label="Amount"
+            type="number"
+            fullWidth
+            value={formState.amount}
+            onChange={(e) => setFormState({ ...formState, amount: e.target.value })}
             style={{ marginBottom: '16px' }}
           />
         </DialogContent>
@@ -204,8 +202,18 @@ const BarbersTable = ({ theme }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setOpenSnackbar(false)} severity="error">
+          {error}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
 
-export default BarbersTable;
+export default OrdersTable;
