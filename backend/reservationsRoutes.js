@@ -6,7 +6,7 @@ const reservationsControler = require('./reservationsControler');
 router.get('/reservations', async (req, res) => {
     const result = await reservationsControler.getReservations();
     if (result.success) {
-        res.status(200).json( {success: true, reservas: result.services});
+        res.status(200).json( {success: true, reservations: result.reservations});
     } else {
         res.status(404).json({ message: result.message });
     }
