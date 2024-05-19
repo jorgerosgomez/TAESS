@@ -1,5 +1,6 @@
 const Reservation = require('./models/reservation');
 const Sequelize = require('sequelize');
+const db = require('./database');
 
 // Función que recibe los campos de una nueva reserva y la agrega a la base de datos
 // Recibe: idCliente, idBarbero, fecha y servicio
@@ -43,21 +44,15 @@ async function deleteReservation(id) {
 // Recibe: idReserva
 async function getReservation(idReserva) {
   try {
-    const reserva = await Reservation.findByPk(idReserva);
+    const query = 'SELECT * FROM Reservations WHERE id = ?';
+    const [result] = await db.execute(query, [idReserva]);
 
-    if (!reserva) {
-      return { success: false, message: 'Reserva no encontrada' };
+    if (result.length > 0) {
+      return { success: true, reserva: result[0] };
     }
-
-    // Mapea los resultados
-    const reservaMapped = {
-      id_client: reserva.id_client,
-      date_reservation: reserva.date_reservation,
-      id_barber: reserva.id_barber,
-      id_service: reserva.id_service,
-    };
-
-    return { success: true, reserva: reservaMapped };
+    else {
+      return { success: false, message: 'No se encontró la reserva en la base de datos' };
+    }
   } catch (error) {
     console.error('Error al obtener la reserva:', error);
     return { success: false, message: 'Error al obtener la reserva', error: error.message };
@@ -67,19 +62,15 @@ async function getReservation(idReserva) {
 // Función que extrae todas las reservas de la base de datos y las devuelve en un objeto JSON
 async function getReservations() {
   try {
-    const reservas = await Reservation.findAll();
+    const query = 'SELECT * FROM Reservations';
+    const [result] = await db.execute(query);
 
-    // Mapea los resultados
-    const reservasMapped = reservas.map(reserva => {
-      return {
-        id_client: reserva.id_client,
-        date_reservation: reserva.date_reservation,
-        id_barber: reserva.id_barber,
-        id_service: reserva.id_service,
-      };
-    });
-
-    return { success: true, reservas: reservasMapped };
+    if (result.length > 0) {
+      return { success: true, reservas: result };
+    }
+    else {
+      return { success: false, message: 'No se encontraron reservas en la base de datos' };
+    }
   } catch (error) {
     console.error('Error al obtener las reservas:', error);
     return { success: false, message: 'Error al obtener las reservas', error: error.message };
