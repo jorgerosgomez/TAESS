@@ -1,25 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import './AboutUsPage.css';
-import { Link } from 'react-router-dom'
 import BannerImage from '../../asserts/fondo.jpeg';
 
-const AboutUsPage = () => {
+function Contact() {
     return (
-        <div className="about">
-            <div className="aboutTop" style={{ backgroundImage: `url(${BannerImage})` }}></div>
-            <div className="aboutBottom">
-                <h1 style={{ marginBottom: '50px' }}>Quienes somos?</h1>
-                <p>En **MyBarberShop**, nos enorgullece ofrecer una experiencia de peluqueria moderna y conveniente. Aqui estan algunas de las ventajas que encontraras al visitarnos:</p>
-                <ul>
-                    <li>**Reservas en Linea:** Sabemos que tu tiempo es valioso. Por eso, hemos implementado un sistema de reservas en linea facil de usar. Puedes elegir la fecha, hora y el barbero de tu preferencia desde la comodidad de tu hogar o mientras estas en movimiento. No mas esperas innecesarias!</li>
-                    <li>**Tienda en Linea Integrada:** Ademas de los servicios de corte de pelo, tambien ofrecemos una tienda en linea con productos de calidad. Desde productos para el cuidado del cabello hasta accesorios de moda, puedes explorar y comprar lo que necesitas antes o despues de tu cita. Todo esta a solo unos clics de distancia!</li>
-                    <li>**Preparacion Personalizada:** Compraste un producto en nuestra tienda en linea? No hay problema. Cuando vengas a cortarte el pelo, tendras tus productos listos y esperandote. Sin demoras ni complicaciones.</li>
-                    <li>**Gestion de Inventario Eficiente:** Nuestros barberos pueden concentrarse en lo que hacen mejor: brindarte un excelente servicio. Nos encargamos de gestionar el inventario de productos y herramientas. Asi, siempre tendran a mano lo necesario para darte el mejor corte.</li>
-                </ul>
-                <p>En **MyBarberShop**, no solo se trata de cortes de pelo; es una experiencia completa. °Te invitamos a visitarnos y descubrir la diferencia!</p>
-            </div>
+      <div className="contact">
+        <div
+          className="leftSide"
+          style={{ backgroundImage: `url(${BannerImage})` }}
+        ></div>
+        <div className="rightSide">
+          <h1> Cont√°ctanos</h1>
+  
+          <form id="contact-form" method="POST">
+            <label htmlFor="name">Nombre Completo</label>
+            <input name="name" placeholder="Introduce tu nombre completo..." type="text" />
+            <label htmlFor="email">Email</label>
+            <input name="email" placeholder="Introduce tu email..." type="email" />
+            <label htmlFor="message">Mensaje</label>
+            <textarea
+              rows="6"
+              placeholder="Escribe tu mensaje..."
+              name="message"
+              required
+            ></textarea>
+            <button type="submit"> Enviar Mensaje</button>
+          </form>
+  
+          <div className="map-container">
+            <iframe
+              title="map"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3127.223321695393!2d-0.5183953880199186!3d38.39008517636012!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd6236b01a40e499%3A0xf1a6c4be35cee314!2sLUIS%20MIGUEL%20PAVIA%20ESTILISTAS%20-%20Peluquer%C3%ADa%20-%20Barber%C3%ADa%20en%20Alicante%20-%20San%20Vicente%20del%20Raspeig!5e0!3m2!1sen!2ses!4v1716137967945!5m2!1sen!2ses"
+              style={{ width: '80%', height: '325px', border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+            ></iframe>
+          </div>
         </div>
+      </div>
     );
-}
-
-export default AboutUsPage;
+  }
+  
+  export default Contact;

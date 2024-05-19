@@ -9,7 +9,7 @@ async function createReservation(idCliente, idBarbero, fecha, servicio) {
     const query = 'INSERT INTO Reservations (id_client, id_barber, date_reservation, id_service) VALUES (?, ?, ?, ?)';
     await db.execute(query, [idCliente, idBarbero, fecha, servicio]);
 
-    return { success: true, message: "Reserva registrada con éxito." reserva: reserva };
+    return { success: true, message: "Reserva registrada con éxito.", reserva: reserva };
   } catch (error) {
     console.error('Error al agregar la reserva:', error);
     return { success: false, message: 'Error al agregar la reserva', error: error.message };
