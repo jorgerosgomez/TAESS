@@ -4,12 +4,12 @@ const db = require('./database');
 
 // Función que recibe los campos de una nueva reserva y la agrega a la base de datos
 // Recibe: idCliente, idBarbero, fecha y servicio
-async function createReservation(idCliente, idBarbero, fecha, servicio) {
+async function createReservation(idCliente, idBarbero, fecha, servicio, duracion, precio) {
   try {
-    const query = 'INSERT INTO Reservations (id_client, id_barber, date_reservation, id_service) VALUES (?, ?, ?, ?)';
-    await db.execute(query, [idCliente, idBarbero, fecha, servicio]);
+    const query = 'INSERT INTO Reservations (id_client, id_barber, date_reservation, id_service, duration_total, price_total) VALUES (?, ?, ?, ?, ?, ?)';
+    const reserva = await db.execute(query, [idCliente, idBarbero, fecha, servicio, duracion, precio]);
 
-    return { success: true, message: "Reserva registrada con éxito." reserva: reserva };
+    return { success: true, message: "Reserva registrada con éxito.", reserva: reserva };
   } catch (error) {
     console.error('Error al agregar la reserva:', error);
     return { success: false, message: 'Error al agregar la reserva', error: error.message };
@@ -70,10 +70,10 @@ async function getReservations() {
 
 // Función que recibe el id de una reserva y unos parámetros correspondientes a los campos del modelo Reserva, para actualizar un registro en la base de datos.
 // Recibe: idReserva, idCliente, idBarbero, fecha, servicio
-async function modifyReservation(idReserva, idCliente, idBarbero, fecha, servicio) {
+async function modifyReservation(idReserva, idCliente, idBarbero, fecha, servicio, duracion, precio) {
   try {
-    const query = 'UPDATE Reservations SET id_client = ?, id_barber = ?, date_reservation = ?, id_service = ? WHERE id = ?';
-    const [result] = await db.execute(query, [idCliente, idBarbero, fecha, servicio, idReserva]);
+    const query = 'UPDATE Reservations SET id_client = ?, id_barber = ?, date_reservation = ?, id_service = ?, duration_total = ?, price_total = ? WHERE id = ?';
+    const [result] = await db.execute(query, [idCliente, idBarbero, fecha, servicio, duracion, precio, idReserva]);
 
     return { success: true, message: 'Reserva actualizada con éxito', reservationId: result.insertId};
   } catch (error) {
