@@ -3,22 +3,19 @@ import '../../Components/LoginModal/LoginModal.css';
 import loginUser from './ReqLogin.js';
 import { useAuth } from "../AuthContext/AuthContext.js";
 
-
 const LoginModal = ({ closeModal, openRegisterModal, theme }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { isAuthenticated, login, logout } = useAuth();
-
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
       const data = await loginUser(username, password);
-      console.log('entro');
       if (data.success) {
         console.log('Inicio de sesión exitoso:', data);
-        login();
+        login(data.user);
         closeModal();
       } else {
         alert(data.message);

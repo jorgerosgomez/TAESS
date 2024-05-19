@@ -3,25 +3,26 @@
 import React, { useState } from 'react';
 import UsersTable from './UsersTable';
 import ServicesTable from './ServicesTable';
+import BarbersTable from './BarbersTable';
+import ProductsTable from './ProductsTable'
 import { Drawer, List, ListItem, ListItemText, CssBaseline, Toolbar, Container } from '@mui/material';
+import OrdersTable from './OrdersTable';
 
 const drawerWidth = 240;
 
 const Admin = ({ theme }) => {
   const [selectedTable, setSelectedTable] = useState('Barbers');
   
-  const tables = ['Barbers', 'OrderLines', 'Orders', 'Products', 'Reservations', 'Services', 'Users'];
+  const tables = ['Barbers', 'Orders', 'Products', 'Reservations', 'Services', 'Users'];
 
   const renderTableContent = () => {
     switch (selectedTable) {
       case 'Barbers':
-        return <div>Content for Barbers</div>;
-      case 'OrderLines':
-        return <div>Content for OrderLines</div>;
+        return <BarbersTable theme={theme} />;
       case 'Orders':
-        return <div>Content for Orders</div>;
+        return <OrdersTable theme={theme} />;
       case 'Products':
-        return <div>Content for Products</div>;
+        return <ProductsTable theme={theme} />;
       case 'Reservations':
         return <div>Content for Reservations</div>;
       case 'Services':

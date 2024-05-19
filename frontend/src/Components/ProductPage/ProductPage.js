@@ -14,8 +14,8 @@ const ProductPage = ({ theme }) => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const json = await response.json();
-        if (json.success && json.data && json.data.products) {
-          setProducts(json.data.products);
+        if (json.success && json.products) {
+          setProducts(json.products);
         } else {
           setError('No se encontraron productos');
         }

@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const createProduct = async (name, description, stock, price, sales, stock_min) => {
   try {
-    const query = 'INSERT INTO products (name, description, stock, price, sales, stock_min) VALUES (?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO Products (name, description, stock, price, sales, stock_min) VALUES (?, ?, ?, ?, ?, ?)';
     const [result] = await db.execute(query, [name, description, stock, price, sales, stock_min]);
 
     return { success: true, message: 'Producto registrado con éxito', productId: result.insertId };
@@ -13,12 +13,10 @@ const createProduct = async (name, description, stock, price, sales, stock_min) 
   }
 };
 
-module.exports = { createProduct };
-
-const modifyProduct = async (name, description, stock, price, sales, stock_min) => {
+const modifyProduct = async (name, description, stock, price, sales, stock_min, productId) => {
   try {
-    const query = 'UPDATE products SET name = ?, description = ?, stock = ?, price = ?, sales = ?, stock_min = ? WHERE id = ?';
-    const [result] = await db.execute(query, [name, description, stock, price, sales, stock_min]);
+    const query = 'UPDATE Products SET name = ?, description = ?, stock = ?, price = ?, sales = ?, stock_min = ? WHERE id = ?';
+    const [result] = await db.execute(query, [name, description, stock, price, sales, stock_min, productId]);
 
     return { success: true, message: 'Producto modificado con éxito', productId: result.insertId };
   } catch (error) {
@@ -27,12 +25,9 @@ const modifyProduct = async (name, description, stock, price, sales, stock_min) 
   }
 };
 
-module.exports = { modifyProduct };
-
-
 const deleteProduct = async (productId) => {
   try {
-    const query = 'DELETE FROM products WHERE id = ?';
+    const query = 'DELETE FROM Products WHERE id = ?';
     const [result] = await db.execute(query, [productId]);
 
     if (result.affectedRows > 0) {
@@ -45,8 +40,6 @@ const deleteProduct = async (productId) => {
     return { success: false, message: 'Error al eliminar el producto' };
   }
 };
-
-module.exports = { deleteProduct };
 
 const getProducts = async () => {
   try {
@@ -64,4 +57,4 @@ const getProducts = async () => {
   }
 };
 
-module.exports = { getProducts };
+module.exports = { getProducts, createProduct, modifyProduct, deleteProduct};

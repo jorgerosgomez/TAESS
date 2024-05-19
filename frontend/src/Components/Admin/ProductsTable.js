@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { fetchUsers, createOrUpdateUser, deleteUser } from './fetchUsers';
+import { fetchProducts, createOrUpdateProduct, deleteProduct } from './fetchProducts';
 import { useTable } from 'react-table';
 import {
   Button,
@@ -17,19 +18,16 @@ import {
   Typography,
   Divider,
   Paper,
-  Checkbox,
-  FormControlLabel,
   IconButton,
 } from '@mui/material';
 import { CSVLink } from 'react-csv';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
-const UsersTable = ({ theme }) => {
+const ProductsTable = ({ theme }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [formState, setFormState] = useState({ id: '', username: '', password: '', fullname: '', email: '', telephone: '', administrador: false });
-  const [error, setError] = useState('');
+  const [formState, setFormState] = useState({id: '', name: '', description: '', stock: '', price: '', sales: '', stock_min: ''});
 
   useEffect(() => {
     fetchData();
@@ -38,8 +36,9 @@ const UsersTable = ({ theme }) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const users = await fetchUsers();
-      setData(users);
+      const products = await fetchProducts();
+      console.log('Products:', products);
+      setData(Array.isArray(products) ? products : []);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -47,51 +46,39 @@ const UsersTable = ({ theme }) => {
   };
 
   const handleCreateOrUpdate = async () => {
-    const { username, password, fullName, email, telephone } = formState;
-    if (!username || !password || !fullName || !email || !telephone) {
-      alert('Todos los campos son requeridos');
-      return;
-    }
-
     try {
-      await createOrUpdateUser(formState);
+      await createOrUpdateProduct(formState);
       fetchData();
       setOpen(false);
-      setFormState({ id: '', username: '', password: '', fullName: '', email: '', telephone: ''});
+      setFormState({id: '', name: '', description: '', stock: '', price: '', sales: '', stock_min: ''});
     } catch (error) {
-      console.error('Error saving user:', error);
-      if (error.message === 'DuplicateUsername') {
-        alert('El nombre de usuario ya está registrado. Por favor, use uno diferente.');
-      } else if (error.message === 'DuplicateEmail') {
-        alert('El email ya está registrado. Por favor, use uno diferente.');
-      } else {
-        alert('Hubo un problema al guardar el usuario.');
-      }
+      console.error('Error saving product:', error);
     }
   };
 
-  const handleEdit = (user) => {
-    setFormState(user);
+  const handleEdit = (product) => {
+    setFormState(product);
     setOpen(true);
   };
 
   const handleDelete = async (id) => {
     try {
-      await deleteUser(id);
+      await deleteProduct(id);
       fetchData();
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('Error deleting product:', error);
     }
   };
 
   const columns = React.useMemo(
     () => [
       { Header: 'ID', accessor: 'id' },
-      { Header: 'Username', accessor: 'username' },
-      { Header: 'Email', accessor: 'email' },
-      { Header: 'Fullname', accessor: 'fullname' },
-      { Header: 'Telephone', accessor: 'telephone' },
-      { Header: 'Administrador', accessor: 'administrador', Cell: ({ value }) => (value === 1 ? 'Sí' : 'No') },
+      { Header: 'Name', accessor: 'name' },
+      { Header: 'Description', accessor: 'description' },
+      { Header: 'Stock', accessor: 'stock' },
+      { Header: 'Price', accessor: 'price' },
+      { Header: 'Sales', accessor: 'sales' },
+      { Header: 'Minimun Stock', accessor: 'stock_min' },
       {
         Header: 'Actions',
         Cell: ({ row }) => (
@@ -121,7 +108,7 @@ const UsersTable = ({ theme }) => {
       }}
     >
       <Typography variant="h4" gutterBottom>
-        Users
+        Products
       </Typography>
       <Divider />
       <div style={{ display: 'flex', justifyContent: 'space-between', margin: '16px 0' }}>
@@ -129,14 +116,11 @@ const UsersTable = ({ theme }) => {
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={() => {
-            setFormState({ id: '', username: '', password: '', fullname: '', email: '', telephone: '', administrador: false });
-            setOpen(true);
-          }}
+          onClick={() => setOpen(true)}
         >
-          Add User
+          Add Product
         </Button>
-        <CSVLink data={data} filename={"users.csv"} style={{ textDecoration: 'none' }}>
+        <CSVLink data={data} filename={"products.csv"} style={{ textDecoration: 'none' }}>
           <Button variant="contained" color="secondary">Export to CSV</Button>
         </CSVLink>
       </div>
@@ -171,58 +155,61 @@ const UsersTable = ({ theme }) => {
       </Paper>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle style={{ color: theme === 'light' ? '#000' : '#fff' }}>
-          {formState.id ? 'Edit User' : 'Add User'}
+          {formState.id ? 'Edit Product' : 'Add Product'}
         </DialogTitle>
         <DialogContent>
-          {error && <Typography color="error">{error}</Typography>}
           <TextField
             margin="dense"
-            label="Username"
+            label="Name"
             type="text"
             fullWidth
-            value={formState.username}
-            onChange={(e) => setFormState({ ...formState, username: e.target.value })}
-            required
+            value={formState.name}
+            onChange={(e) => setFormState({ ...formState, name: e.target.value })}
             style={{ marginBottom: '16px' }}
           />
           <TextField
             margin="dense"
-            label="Password"
-            type="password"
-            fullWidth
-            value={formState.password}
-            onChange={(e) => setFormState({ ...formState, password: e.target.value })}
-            required
-            style={{ marginBottom: '16px' }}
-          />
-          <TextField
-            margin="dense"
-            label="Fullname"
+            label="Description"
             type="text"
             fullWidth
-            value={formState.fullName}
-            onChange={(e) => setFormState({ ...formState, fullName: e.target.value })}
-            required
+            value={formState.description}
+            onChange={(e) => setFormState({ ...formState, description: e.target.value })}
             style={{ marginBottom: '16px' }}
           />
           <TextField
             margin="dense"
-            label="Email"
-            type="email"
+            label="Stock"
+            type="number"
             fullWidth
-            value={formState.email}
-            onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-            required
+            value={formState.stock}
+            onChange={(e) => setFormState({ ...formState, stock: e.target.value })}
             style={{ marginBottom: '16px' }}
           />
           <TextField
             margin="dense"
-            label="Telephone"
-            type="text"
+            label="Price"
+            type="number"
             fullWidth
-            value={formState.telephone}
-            onChange={(e) => setFormState({ ...formState, telephone: e.target.value })}
-            required
+            value={formState.price}
+            onChange={(e) => setFormState({ ...formState, price: e.target.value })}
+            style={{ marginBottom: '16px' }}
+          />
+          <TextField
+            margin="dense"
+            label="Sales"
+            type="number"
+            fullWidth
+            value={formState.sales}
+            onChange={(e) => setFormState({ ...formState, sales: e.target.value })}
+            style={{ marginBottom: '16px' }}
+          />
+          <TextField
+            margin="dense"
+            label="Minimun Stock"
+            type="number"
+            fullWidth
+            value={formState.stock_min}
+            onChange={(e) => setFormState({ ...formState, stock_min: e.target.value })}
             style={{ marginBottom: '16px' }}
           />
         </DialogContent>
@@ -239,4 +226,4 @@ const UsersTable = ({ theme }) => {
   );
 };
 
-export default UsersTable;
+export default ProductsTable;

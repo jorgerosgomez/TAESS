@@ -18,6 +18,23 @@ const getServices = async () => {
     }
   };
 
+//Obtiene un servicio por su id
+const getService = async (id) => {
+  try {
+    const query = 'SELECT * FROM Services WHERE id = ?';
+    const [result] = await db.execute(query, [id]);
+
+    if (result.length > 0) {
+      return { success: true, service: result[0] };
+    } else {
+      return { success: false, message: 'No se encontró el servicio en la base de datos' };
+    }
+  } catch (error) {
+    console.error('Error al obtener el servicio:', error);
+    return { success: false, message: 'Error al obtener el servicio' };
+  }
+};
+
 
 //CREAR
 const createService = async (name, description, duration, price) => {
@@ -58,5 +75,5 @@ const deleteService = async (id) => {
   }
 };
 
-module.exports = { getServices, createService, modifyService, deleteService };
+module.exports = { getService, getServices, createService, modifyService, deleteService };
 
