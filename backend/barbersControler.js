@@ -21,22 +21,10 @@ const getBarbers = async () => {
 // LISTAR UNO POR ID
 const getBarber = async (idBarbero) => {
   try {
-    const barbero = await Barber.findByPk(idBarbero);
+    const query = 'SELECT * FROM Barbers WHERE id_barber = ?';
+    const [result] = await db.execute(query, [idBarbero]);
 
-    if (!barbero) {
-      return { success: false, message: 'Barbero no encontrado' };
-    }
-
-    // Mapea los resultados 
-    const barberoMapped = {
-      id: barbero.id_barber,
-      name: barbero.name,
-      phone: barbero.phone,
-      email: barbero.email,
-      available: barbero.available,
-    };
-
-    return { success: true, barbero: barberoMapped };
+    return { success: true, message:'Barbero leído con éxito', barber: result[0]};
   } catch (error) {
     console.error('Error al obtener el barbero:', error);
     return { success: false, message: 'Error al obtener el barbero', error: error.message };

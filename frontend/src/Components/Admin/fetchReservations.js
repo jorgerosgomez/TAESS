@@ -4,14 +4,23 @@ export const fetchReservations = async () => {
     try {
       const response = await fetch('http://localhost:5000/api/reservations');
       const data = await response.json();
+<<<<<<< HEAD
       console.log('Fetched reservations:', data.reservations);
       return data.reservations;
+=======
+      console.log('Fetched reservations:', data.reservas);
+      return data.reservas;
+>>>>>>> main
     } catch (error) {
       console.error('Error fetching reservations:', error);
       throw error;
     }
   };
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> main
   export const createOrUpdateReservation = async (reservation) => {
     try {
       const method = reservation.id ? 'PATCH' : 'POST';
@@ -29,7 +38,11 @@ export const fetchReservations = async () => {
       throw error;
     }
   };
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> main
   export const deleteReservation = async (id) => {
     try {
       const response = await fetch(`http://localhost:5000/api/reservations/${id}`, {
@@ -42,6 +55,11 @@ export const fetchReservations = async () => {
       console.error('Error deleting reservation:', error);
       throw error;
     }
+<<<<<<< HEAD
     
 };
   
+=======
+
+};
+>>>>>>> main
