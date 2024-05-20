@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import UsersTable from './UsersTable';
 import ServicesTable from './ServicesTable';
 import BarbersTable from './BarbersTable';
-import ProductsTable from './ProductsTable'
+import ProductsTable from './ProductsTable';
+import ReservationsTable from './ReservationsTable';
 import { Drawer, List, ListItem, ListItemText, CssBaseline, Toolbar, Container } from '@mui/material';
 import OrdersTable from './OrdersTable';
 
@@ -24,7 +25,7 @@ const Admin = ({ theme }) => {
       case 'Products':
         return <ProductsTable theme={theme} />;
       case 'Reservations':
-        return <div>Content for Reservations</div>;
+        return <ReservationsTable theme={theme} />;
       case 'Services':
         return <ServicesTable theme={theme} />  ;
       case 'Users':
