@@ -4,10 +4,15 @@ const db = require('./database');
 
 // Función que recibe los campos de una nueva reserva y la agrega a la base de datos
 // Recibe: idCliente, idBarbero, fecha y servicio
-async function createReservation(idCliente, idBarbero, fecha, servicio, duracion, precio) {
+async function createReservation(idCliente, idBarbero, fecha, servicio) {
   try {
+    const serviceDetails = await getServiceDetails(servicio);
+    const { duration, price } = serviceDetails;
+
+    const formattedDate = new Date(fecha).toISOString().slice(0, 19).replace('T', ' '); 
+
     const query = 'INSERT INTO Reservations (id_client, id_barber, date_reservation, id_service, duration_total, price_total) VALUES (?, ?, ?, ?, ?, ?)';
-    const reserva = await db.execute(query, [idCliente, idBarbero, fecha, servicio, duracion, precio]);
+    const reserva = await db.execute(query, [idCliente, idBarbero, formattedDate, servicio, duration, price]);
 
     return { success: true, message: "Reserva registrada con éxito.", reserva: reserva };
   } catch (error) {
@@ -15,7 +20,6 @@ async function createReservation(idCliente, idBarbero, fecha, servicio, duracion
     return { success: false, message: 'Error al agregar la reserva', error: error.message };
   }
 }
-
 // Función que recibe el id de una reserva y la elimina de la base de datos
 // Recibe: id
 async function deleteReservation(id) {
@@ -28,6 +32,21 @@ async function deleteReservation(id) {
   } catch (error) {
     console.error('Error al eliminar la reserva:', error);
     return { success: false, message: 'Error al eliminar la reserva', error: error.message };
+  }
+}
+async function getServiceDetails(serviceId) {
+  try {
+    const query = 'SELECT duration, price FROM Services WHERE id = ?';
+    const [result] = await db.execute(query, [serviceId]);
+
+    if (result.length > 0) {
+      return result[0];
+    } else {
+      throw new Error('Service not found');
+    }
+  } catch (error) {
+    console.error('Error fetching service details:', error);
+    throw error;
   }
 }
 
@@ -70,22 +89,25 @@ async function getReservations() {
 
 // Función que recibe el id de una reserva y unos parámetros correspondientes a los campos del modelo Reserva, para actualizar un registro en la base de datos.
 // Recibe: idReserva, idCliente, idBarbero, fecha, servicio
-async function modifyReservation(idReserva, idCliente, idBarbero, fecha, servicio, duracion, precio) {
+async function modifyReservation(idReserva, idCliente, idBarbero, fecha, servicio) {
   try {
-    const query = 'UPDATE Reservations SET id_client = ?, id_barber = ?, date_reservation = ?, id_service = ?, duration_total = ?, price_total = ? WHERE id = ?';
-    const [result] = await db.execute(query, [idCliente, idBarbero, fecha, servicio, duracion, precio, idReserva]);
+    const serviceDetails = await getServiceDetails(servicio);
+    const { duration, price } = serviceDetails;
 
-    return { success: true, message: 'Reserva actualizada con éxito', reservationId: result.insertId};
+    const query = 'UPDATE Reservations SET id_client = ?, id_barber = ?, date_reservation = ?, id_service = ?, duration_total = ?, price_total = ? WHERE id = ?';
+    const [result] = await db.execute(query, [idCliente, idBarbero, fecha, servicio, duration, price, idReserva]);
+
+    return { success: true, message: 'Reserva actualizada con éxito', reservationId: result.insertId };
   } catch (error) {
     console.error('Error al actualizar la reserva:', error);
     return { success: false, message: 'Error al actualizar la reserva', error: error.message };
   }
 }
-
 module.exports = {
   createReservation,
   deleteReservation,
   getReservation,
   getReservations,
   modifyReservation,
+  getServiceDetails, 
 };
