@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { fetchReservations, createOrUpdateReservation, deleteReservation } from './fetchReservations';
+import { fetchReservations, createOrUpdateReservation, deleteReservation, fetchServices, fetchClients, fetchBarbers } from './fetchReservations'; // Import fetchServices
 import { useTable } from 'react-table';
 import {
   Button,
@@ -19,25 +18,38 @@ import {
   Divider,
   Paper,
   IconButton,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from '@mui/material';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+import 'react-datepicker/dist/react-datepicker.css';
 import { CSVLink } from 'react-csv';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
 const ReservationsTable = ({ theme }) => {
   const [data, setData] = useState([]);
+  const [services, setServices] = useState([]);
+  const [clients, setClients] = useState([]);
+  const [barbers, setBarbers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [formState, setFormState] = useState({idReserva: '', idCliente: '', idBarbero: '', fecha: '', servicio: '', duration: '', price: ''});
+  const [formState, setFormState] = useState({ id: '', idCliente: '', idBarbero: '', fecha: new Date(), servicio: '', duration: '', price: '' });
 
   useEffect(() => {
     fetchData();
+    fetchServiceData();
+    fetchClientData();
+    fetchBarberData();
   }, []);
 
   const fetchData = async () => {
     setLoading(true);
     try {
       const reservations = await fetchReservations();
-      console.log('Reservations:', reservations);
+      console.log('Fetched reservations:', reservations);
       setData(Array.isArray(reservations) ? reservations : []);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -45,19 +57,64 @@ const ReservationsTable = ({ theme }) => {
     setLoading(false);
   };
 
+  const fetchServiceData = async () => {
+    try {
+      const services = await fetchServices();
+      console.log('Fetched services:', services);
+      setServices(services);
+    } catch (error) {
+      console.error('Error fetching services:', error);
+    }
+  };
+
+  const fetchClientData = async () => {
+    try {
+      const clients = await fetchClients();
+      console.log('Fetched clients:', clients);
+      setClients(clients);
+    } catch (error) {
+      console.error('Error fetching clients:', error);
+    }
+  };
+
+  const fetchBarberData = async () => {
+    try {
+      const barbers = await fetchBarbers();
+      console.log('Fetched barbers:', barbers);
+      setBarbers(barbers);
+    } catch (error) {
+      console.error('Error fetching barbers:', error);
+    }
+  };
+
   const handleCreateOrUpdate = async () => {
     try {
-      await createOrUpdateReservation(formState);
+      const payload = {
+        id: formState.id,
+        idCliente: formState.idCliente,
+        idBarbero: formState.idBarbero,
+        fecha: moment(formState.fecha).toISOString(),
+        servicio: formState.servicio
+      };
+      await createOrUpdateReservation(payload);
       fetchData();
       setOpen(false);
-      setFormState({idReserva: '', idCliente: '', idBarbero: '', fecha: '', servicio: '', duration: '', price: ''});
+      setFormState({ id: '', idCliente: '', idBarbero: '', fecha: new Date(), servicio: '', duration: '', price: '' });
     } catch (error) {
       console.error('Error saving reservation:', error);
     }
   };
 
   const handleEdit = (reservation) => {
-    setFormState(reservation);
+    setFormState({
+      ...reservation,
+      idCliente: reservation.id_client,
+      idBarbero: reservation.id_barber,
+      fecha: new Date(reservation.date_reservation),
+      servicio: reservation.id_service,
+      duration: reservation.duration_total,
+      price: reservation.price_total
+    });
     setOpen(true);
   };
 
@@ -70,15 +127,25 @@ const ReservationsTable = ({ theme }) => {
     }
   };
 
+  const handleServiceChange = (event) => {
+    const selectedService = services.find(service => service.id === event.target.value);
+    setFormState({
+      ...formState,
+      servicio: selectedService.id,
+      duration: selectedService.duration,
+      price: selectedService.price
+    });
+  };
+
   const columns = React.useMemo(
     () => [
-      { Header: 'ID', accessor: 'idReserva' },
-      { Header: 'Client', accessor: 'idCliente' },
-      { Header: 'Barber', accessor: 'idBarbero' },
-      { Header: 'Date', accessor: 'fecha' },
-      { Header: 'Service', accessor: 'servicio' },
-      { Header: 'Duration', accessor: 'duration' },
-      { Header: 'Price', accessor: 'price' },
+      { Header: 'ID', accessor: 'id' },
+      { Header: 'Client', accessor: 'id_client' },
+      { Header: 'Barber', accessor: 'id_barber' },
+      { Header: 'Date', accessor: 'date_reservation' },
+      { Header: 'Service', accessor: 'id_service' },
+      { Header: 'Duration', accessor: 'duration_total' },
+      { Header: 'Price', accessor: 'price_total' },
       {
         Header: 'Actions',
         Cell: ({ row }) => (
@@ -158,42 +225,55 @@ const ReservationsTable = ({ theme }) => {
           {formState.id ? 'Edit Reservation' : 'Add Reservation'}
         </DialogTitle>
         <DialogContent>
-          <TextField
-            margin="dense"
-            label="Cliente"
-            type="number"
-            fullWidth
-            value={formState.name}
-            onChange={(e) => setFormState({ ...formState, idCliente: e.target.value })}
-            style={{ marginBottom: '16px' }}
-          />
-          <TextField
-            margin="dense"
-            label="Barbero"
-            type="number"
-            fullWidth
-            value={formState.description}
-            onChange={(e) => setFormState({ ...formState, idBarbero: e.target.value })}
-            style={{ marginBottom: '16px' }}
-          />
-          <TextField
-            margin="dense"
-            label="Fecha"
-            type="date"
-            fullWidth
-            value={formState.stock}
-            onChange={(e) => setFormState({ ...formState, fecha: e.target.value })}
-            style={{ marginBottom: '16px' }}
-          />
-          <TextField
-            margin="dense"
-            label="Servicio"
-            type="number"
-            fullWidth
-            value={formState.servicio}
-            onChange={(e) => setFormState({ ...formState, servicio: e.target.value })}
-            style={{ marginBottom: '16px' }}
-          />
+          <FormControl fullWidth style={{ marginBottom: '16px' }}>
+            <InputLabel>Client</InputLabel>
+            <Select
+              value={formState.idCliente}
+              onChange={(e) => setFormState({ ...formState, idCliente: e.target.value })}
+            >
+              {clients.map(client => (
+                <MenuItem key={client.id} value={client.id}>
+                  {client.fullname}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth style={{ marginBottom: '16px' }}>
+            <InputLabel>Barber</InputLabel>
+            <Select
+              value={formState.idBarbero}
+              onChange={(e) => setFormState({ ...formState, idBarbero: e.target.value })}
+            >
+              {barbers.map(barber => (
+                <MenuItem key={barber.id} value={barber.id}>
+                  {barber.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth style={{ marginBottom: '16px' }}>
+            <InputLabel>Date & Time</InputLabel>
+            <DatePicker
+              selected={formState.fecha}
+              onChange={(date) => setFormState({ ...formState, fecha: date })}
+              showTimeSelect
+              dateFormat="Pp"
+              customInput={<TextField fullWidth />}
+            />
+          </FormControl>
+          <FormControl fullWidth style={{ marginBottom: '16px' }}>
+            <InputLabel>Service</InputLabel>
+            <Select
+              value={formState.servicio}
+              onChange={handleServiceChange}
+            >
+              {services.map(service => (
+                <MenuItem key={service.id} value={service.id}>
+                  {service.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
             margin="dense"
             label="Duration"
@@ -202,6 +282,7 @@ const ReservationsTable = ({ theme }) => {
             value={formState.duration}
             onChange={(e) => setFormState({ ...formState, duration: e.target.value })}
             style={{ marginBottom: '16px' }}
+            disabled
           />
           <TextField
             margin="dense"
@@ -211,6 +292,7 @@ const ReservationsTable = ({ theme }) => {
             value={formState.price}
             onChange={(e) => setFormState({ ...formState, price: e.target.value })}
             style={{ marginBottom: '16px' }}
+            disabled
           />
         </DialogContent>
         <DialogActions>
