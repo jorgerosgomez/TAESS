@@ -114,8 +114,8 @@ const ReservationsTable = ({ theme }) => {
       fecha: new Date(reservation.date_reservation),
       hora: new Date(reservation.date_reservation),
       servicio: reservation.id_service,
-      duration: reservation.duration_total,
-      price: reservation.price_total,
+      duration: Math.ceil(reservation.duration_total), 
+      price: Math.ceil(reservation.price_total), 
     });
     setOpen(true);
   };
@@ -134,8 +134,8 @@ const ReservationsTable = ({ theme }) => {
     setFormState({
       ...formState,
       servicio: selectedService.id,
-      duration: selectedService.duration,
-      price: selectedService.price,
+      duration: Math.ceil(selectedService.duration),
+      price: Math.ceil(selectedService.price), 
     });
   };
 
@@ -293,8 +293,8 @@ const ReservationsTable = ({ theme }) => {
             label="Duration"
             type="number"
             fullWidth
-            value={formState.duration}
-            onChange={(e) => setFormState({ ...formState, duration: e.target.value })}
+            value={Math.ceil(formState.duration)} 
+            onChange={(e) => setFormState({ ...formState, duration: Math.ceil(e.target.value) })} 
             style={{ marginBottom: '16px' }}
             disabled
           />
@@ -303,8 +303,8 @@ const ReservationsTable = ({ theme }) => {
             label="Price"
             type="number"
             fullWidth
-            value={formState.price}
-            onChange={(e) => setFormState({ ...formState, price: e.target.value })}
+            value={Math.ceil(formState.price)} 
+            onChange={(e) => setFormState({ ...formState, price: Math.ceil(e.target.value) })} 
             style={{ marginBottom: '16px' }}
             disabled
           />
