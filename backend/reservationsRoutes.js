@@ -6,7 +6,7 @@ const reservationsControler = require('./reservationsControler');
 router.get('/reservations', async (req, res) => {
     const result = await reservationsControler.getReservations();
     if (result.success) {
-        res.status(200).json( {success: true, reservas: result.services});
+        res.status(200).json( {success: true, reservas: result.reservas});
     } else {
         res.status(404).json({ message: result.message });
     }
@@ -18,8 +18,8 @@ router.post('/reservations', async (req, res) => {
         return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
       }
 
-    const { idCliente, idBarbero, fecha, servicio } = req.body;
-    const result = await reservationsControler.createReservation(idCliente, idBarbero, fecha, servicio);
+    const { idCliente, idBarbero, fecha, servicio, duracion, precio } = req.body;
+    const result = await reservationsControler.createReservation(idCliente, idBarbero, fecha, servicio, duracion, precio);
     if (result.success) {
         res.status(201).json(result);
     } else {
@@ -30,18 +30,18 @@ router.post('/reservations', async (req, res) => {
 // RUTA MODIFICAR
 router.patch('/reservations/:id', async (req, res) => {
     if (!req.is('application/json')) {
-        return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
-      }
-
+      return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
+    }
+  
     const { id } = req.params;
     const { idCliente, idBarbero, fecha, servicio } = req.body;
     const result = await reservationsControler.modifyReservation(id, idCliente, idBarbero, fecha, servicio);
     if (result.success) {
-        res.status(200).json(result);
+      res.status(200).json(result);
     } else {
-        res.status(400).json({ message: result.message });
+      res.status(400).json({ message: result.message });
     }
-});
+  });
 
 // RUTA BORRAR
 router.delete('/reservations/:id', async (req, res) => {
