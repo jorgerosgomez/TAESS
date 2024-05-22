@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchReservations, createOrUpdateReservation, deleteReservation, fetchServices, fetchClients, fetchBarbers } from './fetchReservations'; // Import fetchServices
+import { fetchReservations, createOrUpdateReservation, deleteReservation, fetchServices, fetchClients, fetchBarbers } from './fetchReservations';
 import { useTable } from 'react-table';
 import {
   Button,
@@ -24,10 +24,10 @@ import {
   FormControl,
 } from '@mui/material';
 import DatePicker from 'react-datepicker';
-import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CSVLink } from 'react-csv';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import moment from 'moment';
 
 const ReservationsTable = ({ theme }) => {
   const [data, setData] = useState([]);
@@ -36,7 +36,7 @@ const ReservationsTable = ({ theme }) => {
   const [barbers, setBarbers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [formState, setFormState] = useState({ id: '', idCliente: '', idBarbero: '', fecha: new Date(), servicio: '', duration: '', price: '' });
+  const [formState, setFormState] = useState({ id: '', idCliente: '', idBarbero: '', fecha: new Date(), hora: new Date(), servicio: '', duration: '', price: '' });
 
   useEffect(() => {
     fetchData();
@@ -89,17 +89,18 @@ const ReservationsTable = ({ theme }) => {
 
   const handleCreateOrUpdate = async () => {
     try {
+      const combinedDateTime = moment(formState.fecha).format('YYYY-MM-DD') + ' ' + moment(formState.hora).format('HH:mm:ss');
       const payload = {
         id: formState.id,
         idCliente: formState.idCliente,
         idBarbero: formState.idBarbero,
-        fecha: moment(formState.fecha).toISOString(),
-        servicio: formState.servicio
+        fecha: combinedDateTime,
+        servicio: formState.servicio,
       };
       await createOrUpdateReservation(payload);
       fetchData();
       setOpen(false);
-      setFormState({ id: '', idCliente: '', idBarbero: '', fecha: new Date(), servicio: '', duration: '', price: '' });
+      setFormState({ id: '', idCliente: '', idBarbero: '', fecha: new Date(), hora: new Date(), servicio: '', duration: '', price: '' });
     } catch (error) {
       console.error('Error saving reservation:', error);
     }
@@ -111,9 +112,10 @@ const ReservationsTable = ({ theme }) => {
       idCliente: reservation.id_client,
       idBarbero: reservation.id_barber,
       fecha: new Date(reservation.date_reservation),
+      hora: new Date(reservation.date_reservation),
       servicio: reservation.id_service,
       duration: reservation.duration_total,
-      price: reservation.price_total
+      price: reservation.price_total,
     });
     setOpen(true);
   };
@@ -133,7 +135,7 @@ const ReservationsTable = ({ theme }) => {
       ...formState,
       servicio: selectedService.id,
       duration: selectedService.duration,
-      price: selectedService.price
+      price: selectedService.price,
     });
   };
 
@@ -208,9 +210,9 @@ const ReservationsTable = ({ theme }) => {
             {rows.map(row => {
               prepareRow(row);
               return (
-                <TableRow {...row.getRowProps()}>
+                <TableRow {...row.getRowProps()} key={row.original.id}>
                   {row.cells.map(cell => (
-                    <TableCell {...cell.getCellProps()} style={{ color: '#000' }}>
+                    <TableCell {...cell.getCellProps()} style={{ color: '#000' }} key={cell.column.id}>
                       {cell.render('Cell')}
                     </TableCell>
                   ))}
@@ -252,12 +254,24 @@ const ReservationsTable = ({ theme }) => {
             </Select>
           </FormControl>
           <FormControl fullWidth style={{ marginBottom: '16px' }}>
-            <InputLabel>Date & Time</InputLabel>
+            <label>Date</label>
             <DatePicker
               selected={formState.fecha}
               onChange={(date) => setFormState({ ...formState, fecha: date })}
+              dateFormat="MMMM d, yyyy"
+              customInput={<TextField fullWidth />}
+            />
+          </FormControl>
+          <FormControl fullWidth style={{ marginBottom: '16px' }}>
+            <label>Time</label>
+            <DatePicker
+              selected={formState.hora}
+              onChange={(date) => setFormState({ ...formState, hora: date })}
               showTimeSelect
-              dateFormat="Pp"
+              showTimeSelectOnly
+              timeIntervals={15}
+              timeCaption="Time"
+              dateFormat="h:mm aa"
               customInput={<TextField fullWidth />}
             />
           </FormControl>

@@ -94,10 +94,12 @@ async function modifyReservation(idReserva, idCliente, idBarbero, fecha, servici
     const serviceDetails = await getServiceDetails(servicio);
     const { duration, price } = serviceDetails;
 
-    const query = 'UPDATE Reservations SET id_client = ?, id_barber = ?, date_reservation = ?, id_service = ?, duration_total = ?, price_total = ? WHERE id = ?';
-    const [result] = await db.execute(query, [idCliente, idBarbero, fecha, servicio, duration, price, idReserva]);
+    const formattedDate = new Date(fecha).toISOString().slice(0, 19).replace('T', ' '); 
 
-    return { success: true, message: 'Reserva actualizada con éxito', reservationId: result.insertId };
+    const query = 'UPDATE Reservations SET id_client = ?, id_barber = ?, date_reservation = ?, id_service = ?, duration_total = ?, price_total = ? WHERE id = ?';
+    const [result] = await db.execute(query, [idCliente, idBarbero, formattedDate, servicio, duration, price, idReserva]);
+
+    return { success: true, message: 'Reserva actualizada con éxito', reservationId: idReserva };
   } catch (error) {
     console.error('Error al actualizar la reserva:', error);
     return { success: false, message: 'Error al actualizar la reserva', error: error.message };

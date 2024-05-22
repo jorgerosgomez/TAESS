@@ -30,18 +30,18 @@ router.post('/reservations', async (req, res) => {
 // RUTA MODIFICAR
 router.patch('/reservations/:id', async (req, res) => {
     if (!req.is('application/json')) {
-        return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
-      }
-
-    const { id } = req.params;
-    const { idCliente, idBarbero, fecha, servicio, duracion, precio } = req.body;
-    const result = await reservationsControler.modifyReservation(id, idCliente, idBarbero, fecha, servicio, duracion, precio);
-    if (result.success) {
-        res.status(200).json(result);
-    } else {
-        res.status(400).json({ message: result.message });
+      return res.status(400).json({ success: false, message: 'El tipo de contenido no es application/json' });
     }
-});
+  
+    const { id } = req.params;
+    const { idCliente, idBarbero, fecha, servicio } = req.body;
+    const result = await reservationsControler.modifyReservation(id, idCliente, idBarbero, fecha, servicio);
+    if (result.success) {
+      res.status(200).json(result);
+    } else {
+      res.status(400).json({ message: result.message });
+    }
+  });
 
 // RUTA BORRAR
 router.delete('/reservations/:id', async (req, res) => {
